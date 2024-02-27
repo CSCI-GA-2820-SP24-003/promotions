@@ -31,7 +31,7 @@ class Promotion(db.Model):
     start_date = db.Column(db.Date(), nullable=False, default=date.today())
     duration = db.Column(db.Integer, nullable=False)
     rule = db.Column(db.String(63), nullable=False)
-    products_id = db.Column(db.Integer, nullable=False)
+    product_id = db.Column(db.Integer, nullable=False)
 
     # Todo: Place the rest of your schema here...
 
@@ -77,7 +77,14 @@ class Promotion(db.Model):
 
     def serialize(self):
         """Serializes a Promotion into a dictionary"""
-        return {"id": self.id, "name": self.name}
+        return {
+            "id": self.id,
+            "name": self.name,
+            "start_date": self.start_date,
+            "duration": self.duration,
+            "rule": self.rule,
+            "product_id": self.product_id,
+        }
 
     def deserialize(self, data):
         """
@@ -88,6 +95,10 @@ class Promotion(db.Model):
         """
         try:
             self.name = data["name"]
+            self.start_date = date.fromisoformat(data["start_date"])
+            self.duration = data["duration"]
+            self.rule = data["rule"]
+            self.product_id = data["product_id"]
         except AttributeError as error:
             raise DataValidationError("Invalid attribute: " + error.args[0]) from error
         except KeyError as error:

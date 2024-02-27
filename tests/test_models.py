@@ -1,5 +1,5 @@
 """
-Test cases for Pet Model
+Test cases for Promotion Model
 """
 
 import os
@@ -61,13 +61,32 @@ class TestPromotion(TestCase):
             start_date=date.fromisoformat("2023-12-29"),
             duration=5,
             rule="30'%'discount",
-            products_id=1,
+            product_id=1,
         )
         self.assertEqual(str(promotion), "<Promotion Happy_New_Year id=[None]>")
         self.assertTrue(promotion is not None)
         self.assertEqual(promotion.id, None)
-        self.assertEqual(promotion.start_date, date.today())
+        # self.assertEqual(promotion.start_date, date.today())
         self.assertEqual(promotion.start_date, date.fromisoformat("2023-12-29"))
         self.assertEqual(promotion.duration, 5)
         self.assertEqual(promotion.rule, "30'%'discount")
-        self.assertEqual(promotion.products_id, 1)
+        self.assertEqual(promotion.product_id, 1)
+
+    def test_add_a_promotion(self):
+        """It should Create a promotion and add it to the database"""
+        promotions = Promotion.all()
+        self.assertEqual(promotions, [])
+        promotion = Promotion(
+            name="Happy_New_Year",
+            start_date=date.fromisoformat("2023-12-29"),
+            duration=5,
+            rule="30'%'discount",
+            product_id=1,
+        )
+        self.assertTrue(promotion is not None)
+        self.assertEqual(promotion.id, None)
+        promotion.create()
+        # Assert that it was assigned an id and shows up in the database
+        self.assertIsNotNone(promotion.id)
+        promotions = Promotion.all()
+        self.assertEqual(len(promotions), 1)
