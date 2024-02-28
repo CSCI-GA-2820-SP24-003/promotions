@@ -57,6 +57,8 @@ class Promotion(db.Model):
         Updates a Promotion to the database
         """
         logger.info("Saving %s", self.name)
+        if not self.id:  # it should not update a promotion with no id
+            raise DataValidationError("Update called with empty ID field")
         try:
             db.session.commit()
         except Exception as e:
@@ -80,7 +82,7 @@ class Promotion(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "start_date": self.start_date,
+            "start_date": self.start_date.isoformat(),
             "duration": self.duration,
             "rule": self.rule,
             "product_id": self.product_id,
@@ -95,12 +97,25 @@ class Promotion(db.Model):
         """
         try:
             self.name = data["name"]
-            # self.start_date = date.fromisoformat(data["start_date"])
-            # self.duration = data["duration"]
-            # self.rule = data["rule"]
-            # self.product_id = data["product_id"]
-        except AttributeError as error:
-            raise DataValidationError("Invalid attribute: " + error.args[0]) from error
+            self.start_date = date.fromisoformat(data["start_date"])
+            if isinstance(data["duration"], int):
+                self.duration = data["duration"]
+            else:
+                raise DataValidationError(
+                    "Invalid type for integer [duration]: "
+                    + str(type(data["duration"]))
+                )
+            self.rule = data["rule"]
+            if isinstance(data["product_id"], int):
+                self.product_id = data["product_id"]
+            else:
+                raise DataValidationError(
+                    "Invalid type for integer [product_id]: "
+                    + str(type(data["product_id"]))
+                )
+
+        # except AttributeError as error:   don't know how to cover this
+        #     raise DataValidationError("Invalid attribute: " + error.args[0]) from error
         except KeyError as error:
             raise DataValidationError(
                 "Invalid Promotion: missing " + error.args[0]
@@ -126,7 +141,7 @@ class Promotion(db.Model):
     def find(cls, by_id):
         """Finds a Promotion by it's ID"""
         logger.info("Processing lookup for id %s ...", by_id)
-        return cls.query.get(by_id)
+        return cls.query.session.get(cls, by_id)
 
     @classmethod
     def find_by_name(cls, name):
