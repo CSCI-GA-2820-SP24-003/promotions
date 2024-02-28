@@ -95,10 +95,10 @@ class Promotion(db.Model):
         """
         try:
             self.name = data["name"]
-            self.start_date = date.fromisoformat(data["start_date"])
-            self.duration = data["duration"]
-            self.rule = data["rule"]
-            self.product_id = data["product_id"]
+            # self.start_date = date.fromisoformat(data["start_date"])
+            # self.duration = data["duration"]
+            # self.rule = data["rule"]
+            # self.product_id = data["product_id"]
         except AttributeError as error:
             raise DataValidationError("Invalid attribute: " + error.args[0]) from error
         except KeyError as error:
