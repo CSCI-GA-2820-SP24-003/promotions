@@ -114,7 +114,8 @@ class Promotion(db.Model):
                     + str(type(data["product_id"]))
                 )
 
-        # except AttributeError as error:   don't know how to cover this
+        # Todo: uncomment this code when tests can cover this
+        # except AttributeError as error:
         #     raise DataValidationError("Invalid attribute: " + error.args[0]) from error
         except KeyError as error:
             raise DataValidationError(

@@ -5,20 +5,23 @@ TestPromotion API Service Test Suite
 import os
 import logging
 from unittest import TestCase
+from datetime import date
 from wsgi import app
 from service.common import status
 from service.models import db, Promotion
+from .factories import PromotionFactory
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql+psycopg://postgres:postgres@localhost:5432/testdb"
 )
+BASE_URL = "/promotions"
 
 
 ######################################################################
 #  T E S T   C A S E S
 ######################################################################
 # pylint: disable=too-many-public-methods
-class TestYourResourceService(TestCase):
+class TestPromotionService(TestCase):
     """REST API Server Tests"""
 
     @classmethod
@@ -55,4 +58,34 @@ class TestYourResourceService(TestCase):
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
-    # Todo: Add your test cases here...
+    def test_create_promotion(self):
+        """It should Create a new Promotion"""
+        test_promotion = PromotionFactory()
+        logging.debug("Test Promotion: %s", test_promotion.serialize())
+        response = self.client.post(BASE_URL, json=test_promotion.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # Make sure location header is set
+        location = response.headers.get("Location", None)
+        self.assertIsNotNone(location)
+
+        # Check the data is correct
+        new_promotion = response.get_json()
+        self.assertEqual(new_promotion["name"], test_promotion.name)
+        self.assertEqual(
+            date.fromisoformat(new_promotion["start_date"]), test_promotion.start_date
+        )
+        self.assertEqual(new_promotion["duration"], test_promotion.duration)
+        self.assertEqual(new_promotion["rule"], test_promotion.rule)
+        self.assertEqual(new_promotion["product_id"], test_promotion.product_id)
+
+        # Todo: Uncomment this code when get_promotions is implemented
+        # Check that the location header was correct
+        # response = self.client.get(location)
+        # self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # new_promotion = response.get_json()
+        # self.assertEqual(new_promotion["name"], test_promotion.name)
+        # self.assertEqual(date.fromisoformat(new_promotion["start_date"]), test_promotion.start_date)
+        # self.assertEqual(new_promotion["duration"], test_promotion.duration)
+        # self.assertEqual(new_promotion["rule"], test_promotion.rule)
+        # self.assertEqual(new_promotion["product_id"], test_promotion.product_id)
