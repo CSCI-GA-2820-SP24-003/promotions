@@ -113,3 +113,16 @@ class TestPromotionService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
         self.assertEqual(data["name"], test_promotion.name)
+
+    def test_delete_promotion(self):
+        """This should delete a single Promotion"""
+        # get the id of a promotion
+        test_db = self._create_promotions(5)
+        test_promotion_id = test_db[0].id
+        test_promotion_name = test_db[0].name
+        response = self.client.post(f"{BASE_URL}/delete/{test_promotion_id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(data["name"], test_promotion_name)
+        response_again = self.client.post(f"{BASE_URL}/delete/{test_promotion_id}")
+        self.assertEqual(response_again.status_code, status.HTTP_404_NOT_FOUND)
