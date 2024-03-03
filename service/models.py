@@ -156,7 +156,7 @@ class Promotion(db.Model):
     
     @classmethod
     def delete_by_id(cls, by_id):
-        """Finds a Promotion by it's ID"""
+        """Delete a Promotion by its ID"""
         logger.info("Processing delete with id %s ...", by_id)
         cls.query.filter(cls.id == by_id).delete()
 
