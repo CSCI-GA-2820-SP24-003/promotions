@@ -126,3 +126,14 @@ class TestPromotionService(TestCase):
         self.assertEqual(data["name"], test_promotion_name)
         response_again = self.client.post(f"{BASE_URL}/delete/{test_promotion_id}")
         self.assertEqual(response_again.status_code, status.HTTP_404_NOT_FOUND)
+
+
+    def test_list_promotion(self): #maybe we dont need an input for the call
+        """It should list all Promotions"""
+        self._create_promotions(2)
+        response = self.client.get(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        promotions = response.get_json()
+        self.assertEqual(len(promotions), 2) 
+
+       

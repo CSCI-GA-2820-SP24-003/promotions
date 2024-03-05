@@ -76,6 +76,17 @@ class Promotion(db.Model):
             db.session.rollback()
             logger.error("Error deleting record: %s", self)
             raise DataValidationError(e) from e
+        
+    def list_all(): 
+        """Retrieve all promotions. Returns: List[Promotion]: A list of all promotions. """    
+        logger.info("Listing all Promotions")
+        try:
+            promotions = Promotion.all()
+            db.session.commit()
+            return promotions
+        except Exception as e:
+            logger.error("Error listing records")
+            raise DataValidationError(e) from e
 
     def serialize(self):
         """Serializes a Promotion into a dictionary"""
