@@ -49,6 +49,22 @@ class TestPromotionService(TestCase):
         """This runs after each test"""
         db.session.remove()
 
+    def _create_promotions(self, count):
+        """Factory method to create promotions in bulk"""
+        promotions = []
+        for _ in range(count):
+            test_promotion = PromotionFactory()
+            response = self.client.post(BASE_URL, json=test_promotion.serialize())
+            self.assertEqual(
+                response.status_code,
+                status.HTTP_201_CREATED,
+                "Could not create test promotion",
+            )
+            new_promotion = response.get_json()
+            test_promotion.id = new_promotion["id"]
+            promotions.append(test_promotion)
+        return promotions
+
     ######################################################################
     #  P L A C E   T E S T   C A S E S   H E R E
     ######################################################################
@@ -79,16 +95,37 @@ class TestPromotionService(TestCase):
         self.assertEqual(new_promotion["rule"], test_promotion.rule)
         self.assertEqual(new_promotion["product_id"], test_promotion.product_id)
 
-        # Todo: Uncomment this code when get_promotions is implemented
         # Check that the location header was correct
-        # response = self.client.get(location)
-        # self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # new_promotion = response.get_json()
-        # self.assertEqual(new_promotion["name"], test_promotion.name)
-        # self.assertEqual(date.fromisoformat(new_promotion["start_date"]), test_promotion.start_date)
-        # self.assertEqual(new_promotion["duration"], test_promotion.duration)
-        # self.assertEqual(new_promotion["rule"], test_promotion.rule)
-        # self.assertEqual(new_promotion["product_id"], test_promotion.product_id)
+        response = self.client.get(location)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        new_promotion = response.get_json()
+        self.assertEqual(new_promotion["name"], test_promotion.name)
+        self.assertEqual(date.fromisoformat(new_promotion["start_date"]), test_promotion.start_date)
+        self.assertEqual(new_promotion["duration"], test_promotion.duration)
+        self.assertEqual(new_promotion["rule"], test_promotion.rule)
+        self.assertEqual(new_promotion["product_id"], test_promotion.product_id)
+
+    def test_get_promotion(self):
+        """It should Get a single Promotion"""
+        # get the id of a promotion
+        test_promotion = self._create_promotions(1)[0]
+        response = self.client.get(f"{BASE_URL}/{test_promotion.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(data["name"], test_promotion.name)
+
+    def test_delete_promotion(self):
+        """This should delete a single Promotion"""
+        # get the id of a promotion
+        test_db = self._create_promotions(5)
+        test_promotion_id = test_db[0].id
+        test_promotion_name = test_db[0].name
+        response = self.client.post(f"{BASE_URL}/delete/{test_promotion_id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(data["name"], test_promotion_name)
+        response_again = self.client.post(f"{BASE_URL}/delete/{test_promotion_id}")
+        self.assertEqual(response_again.status_code, status.HTTP_404_NOT_FOUND)
 
 
     def test_list_promotion(self): #maybe we dont need an input for the call
@@ -99,23 +136,4 @@ class TestPromotionService(TestCase):
         promotions = response.get_json()
         self.assertEqual(len(promotions), 2) 
 
-
-######################################################################
-#  HELPER FUNCTION
-######################################################################
-    def _create_promotions(self, size):
-        """Factory method to create promotions in bulk"""
-        promotions = []
-        for _ in range(size):
-            promotion = PromotionFactory()
-            resp = self.client.post(BASE_URL, json=promotion.serialize())
-            self.assertEqual(
-                resp.status_code,
-                status.HTTP_201_CREATED,
-                "Could not create test promotion"
-            )
-            new_promotion = resp.get_json()
-            promotion.id = new_promotion["id"]
-            promotions.append(promotion)
-
-        return promotions
+       
