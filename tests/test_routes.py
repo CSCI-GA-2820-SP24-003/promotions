@@ -89,3 +89,33 @@ class TestPromotionService(TestCase):
         # self.assertEqual(new_promotion["duration"], test_promotion.duration)
         # self.assertEqual(new_promotion["rule"], test_promotion.rule)
         # self.assertEqual(new_promotion["product_id"], test_promotion.product_id)
+
+
+    def test_list_promotion(self): #maybe we dont need an input for the call
+        """It should list all Promotions"""
+        self._create_promotions(2)
+        response = self.client.get(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        promotions = response.get_json()
+        self.assertEqual(len(promotions), 2) 
+
+
+######################################################################
+#  HELPER FUNCTION
+######################################################################
+    def _create_promotions(self, size):
+        """Factory method to create promotions in bulk"""
+        promotions = []
+        for _ in range(size):
+            promotion = PromotionFactory()
+            resp = self.client.post(BASE_URL, json=promotion.serialize())
+            self.assertEqual(
+                resp.status_code,
+                status.HTTP_201_CREATED,
+                "Could not create test promotion"
+            )
+            new_promotion = resp.get_json()
+            promotion.id = new_promotion["id"]
+            promotions.append(promotion)
+
+        return promotions

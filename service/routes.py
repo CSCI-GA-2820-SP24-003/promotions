@@ -70,6 +70,26 @@ def create_promotions():
 
 
 ######################################################################
+# LIST PROMOTIONS
+######################################################################
+@app.route("/promotions", methods=["GET"])
+def list_promotions():
+    """
+    Retreives list of all Promotions
+
+    This endpoint will return a list of all Promotions 
+    """
+    app.logger.info("Request to List all promotions")
+    #should i deserialize first?
+    promotions =  Promotion.list_all()
+    serialized_promotions = [promotion.serialize() for promotion in promotions]
+
+
+    app.logger.info("Promotions Listed") 
+    return jsonify(serialized_promotions), status.HTTP_200_OK
+
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 
