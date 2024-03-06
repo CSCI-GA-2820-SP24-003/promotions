@@ -145,6 +145,36 @@ class TestPromotionService(TestCase):
         logging.debug("Response data = %s", data)
         self.assertIn("was not found", data["message"])
 
+    def test_update_promotion(self):
+        """It should Update an existing Promotion"""
+        # Step 1: Create a promotion to update
+        test_promotion = self._create_promotions(1)[0]
+
+        # Step 2: Define the data for updating the promotion
+        update_data = {
+            "name": "Updated Promotion Name",
+            "start_date": str(
+                test_promotion.start_date
+            ),  # Keeping the original start_date for completeness
+            "duration": test_promotion.duration + 5,  # Updating the duration
+            "rule": "Updated Rule",  # Updating the rule
+            "product_id": test_promotion.product_id,  # Keeping the original product_id for completeness
+        }
+
+        # Step 3: Send a PUT request to update the promotion
+        response = self.client.put(f"{BASE_URL}/{test_promotion.id}", json=update_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Step 4: Fetch the updated promotion and verify the updates
+        response = self.client.get(f"{BASE_URL}/{test_promotion.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        updated_promotion = response.get_json()
+
+        self.assertEqual(updated_promotion["name"], update_data["name"])
+        self.assertEqual(updated_promotion["duration"], update_data["duration"])
+        self.assertEqual(updated_promotion["rule"], update_data["rule"])
+        self.assertEqual(updated_promotion["product_id"], update_data["product_id"])
+
 
 ######################################################################
 #  T E S T   S A D   P A T H S
