@@ -33,8 +33,6 @@ class Promotion(db.Model):
     rule = db.Column(db.String(63), nullable=False)
     product_id = db.Column(db.Integer, nullable=False)
 
-    # Todo: Place the rest of your schema here...
-
     def __repr__(self):
         return f"<Promotion {self.name} id=[{self.id}]>"
 
@@ -76,9 +74,9 @@ class Promotion(db.Model):
             db.session.rollback()
             logger.error("Error deleting record: %s", self)
             raise DataValidationError(e) from e
-        
-    def list_all(): 
-        """Retrieve all promotions. Returns: List[Promotion]: A list of all promotions. """    
+
+    def list_all():
+        """Retrieve all promotions. Returns: List[Promotion]: A list of all promotions."""
         logger.info("Listing all Promotions")
         try:
             promotions = Promotion.all()
@@ -164,10 +162,9 @@ class Promotion(db.Model):
         """
         logger.info("Processing name query for %s ...", name)
         return cls.query.filter(cls.name == name)
-    
+
     @classmethod
     def delete_by_id(cls, by_id):
         """Delete a Promotion by its ID"""
         logger.info("Processing delete with id %s ...", by_id)
         cls.query.filter(cls.id == by_id).delete()
-
