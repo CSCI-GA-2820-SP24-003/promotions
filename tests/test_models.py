@@ -58,7 +58,6 @@ class TestPromotionModel(TestCaseBase):
     #  T E S T   C A S E S
     ######################################################################
 
-    # Todo: Add your test cases here...
     def test_create_a_promotion(self):
         """It should Create a promotion and assert that it exists"""
         promotion = Promotion(
