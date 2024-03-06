@@ -100,7 +100,9 @@ class TestPromotionService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         new_promotion = response.get_json()
         self.assertEqual(new_promotion["name"], test_promotion.name)
-        self.assertEqual(date.fromisoformat(new_promotion["start_date"]), test_promotion.start_date)
+        self.assertEqual(
+            date.fromisoformat(new_promotion["start_date"]), test_promotion.start_date
+        )
         self.assertEqual(new_promotion["duration"], test_promotion.duration)
         self.assertEqual(new_promotion["rule"], test_promotion.rule)
         self.assertEqual(new_promotion["product_id"], test_promotion.product_id)
@@ -127,13 +129,10 @@ class TestPromotionService(TestCase):
         response_again = self.client.post(f"{BASE_URL}/delete/{test_promotion_id}")
         self.assertEqual(response_again.status_code, status.HTTP_404_NOT_FOUND)
 
-
-    def test_list_promotion(self): #maybe we dont need an input for the call
+    def test_list_promotion(self):  # maybe we dont need an input for the call
         """It should list all Promotions"""
         self._create_promotions(2)
         response = self.client.get(BASE_URL)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         promotions = response.get_json()
-        self.assertEqual(len(promotions), 2) 
-
-       
+        self.assertEqual(len(promotions), 2)

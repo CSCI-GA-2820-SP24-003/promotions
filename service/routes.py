@@ -81,7 +81,10 @@ def get_promotions(promotion_id):
 
     promotion = Promotion.find(promotion_id)
     if not promotion:
-        error(status.HTTP_404_NOT_FOUND, f"Promotion with id '{promotion_id}' was not found.")
+        error(
+            status.HTTP_404_NOT_FOUND,
+            f"Promotion with id '{promotion_id}' was not found.",
+        )
 
     app.logger.info("Returning promotion: %s", promotion.name)
     return jsonify(promotion.serialize()), status.HTTP_200_OK
@@ -102,29 +105,29 @@ def delete_promotions(promotion_id):
     app.logger.info("Request to delete promotion with id: %s", promotion_id)
     promotion = Promotion.find(promotion_id)
     if not promotion:
-        error(status.HTTP_404_NOT_FOUND, f"Promotion with id '{promotion_id}' was not found.")
+        error(
+            status.HTTP_404_NOT_FOUND,
+            f"Promotion with id '{promotion_id}' was not found.",
+        )
     Promotion.delete_by_id(promotion_id)
     app.logger.info("Deleted Promotion: %s", promotion.name)
     return jsonify(promotion.serialize()), status.HTTP_200_OK
-  
-  
+
+
 ######################################################################
 # LIST PROMOTIONS
 ######################################################################
 @app.route("/promotions", methods=["GET"])
 def list_promotions():
     """
-    Retreives list of all Promotions
-
-    This endpoint will return a list of all Promotions 
+    Retrieves list of all Promotions
+    This endpoint will return a list of all Promotions
     """
     app.logger.info("Request to List all promotions")
-    #should i deserialize first?
-    promotions =  Promotion.list_all()
+    # should i deserialize first?
+    promotions = Promotion.list_all()
     serialized_promotions = [promotion.serialize() for promotion in promotions]
-
-
-    app.logger.info("Promotions Listed") 
+    app.logger.info("Promotions Listed")
     return jsonify(serialized_promotions), status.HTTP_200_OK
 
 
