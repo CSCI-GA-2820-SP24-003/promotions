@@ -23,7 +23,7 @@ and Delete Promotions from the inventory of promotions in the PromotionShop
 
 from flask import jsonify, request, url_for, abort
 from flask import current_app as app  # Import Flask application
-from service.models import Promotion
+from service.models import Promotion, db
 from service.common import status  # HTTP Status Codes
 
 
@@ -129,6 +129,36 @@ def list_promotions():
     serialized_promotions = [promotion.serialize() for promotion in promotions]
     app.logger.info("Promotions Listed")
     return jsonify(serialized_promotions), status.HTTP_200_OK
+
+
+######################################################################
+# UPDATE AN EXISTING PROMOTION
+######################################################################
+@app.route("/promotions/<int:promotion_id>", methods=["PUT"])
+def update_promotions(promotion_id):
+    """
+    Update a Promotion
+
+    This endpoint will update a Promotion based on the body that is posted
+    """
+    app.logger.info("Request to update promotion with id: %s", promotion_id)
+    check_content_type("application/json")
+
+    promotion = Promotion.find(promotion_id)
+    if not promotion:
+        error(
+            status.HTTP_404_NOT_FOUND,
+            f"Promotion with id '{promotion_id}' was not found.",
+        )
+
+    promotion.deserialize(request.get_json())
+    promotion.update()
+
+    # Commit changes to the database
+    db.session.commit()
+
+    app.logger.info("Promotion with ID [%s] updated.", promotion.id)
+    return jsonify(promotion.serialize()), status.HTTP_200_OK
 
 
 ######################################################################
