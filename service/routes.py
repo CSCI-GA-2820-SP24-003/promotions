@@ -45,7 +45,7 @@ def index():
 
 
 ######################################################################
-# CREATE A NEW ACCOUNT
+# CREATE A NEW PROMOTION
 ######################################################################
 @app.route("/promotions", methods=["POST"])
 def create_promotions():
