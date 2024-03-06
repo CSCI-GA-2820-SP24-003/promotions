@@ -1,9 +1,46 @@
-# NYU DevOps Project Template
+# NYU DevOps Spring 23 Promotions Squad
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://python.org/)
 
-This is a skeleton you can use to start your projects
+## Overview
+This is the Promotions repository of the back-end of an e-Commerce Website as a collection of RESTful services. The Promotions Squad handles deals on products (Eg: 20 % discount, buy 1 get 1 etc.)
+
+## Database Schema
+
+| Column          | Data type | Details     |
+|-----------------|-----------|-----------------|
+| id              | `<integer>` | Primary key       |
+| name        | `<string>` | Name of the promotion |
+| start_date  | `<date>`  | The start date of the promotion|
+| duration       | `<integer>`  | No. of days for which the promotion is valid |
+| rule      | `<string>`  | Rule describing the promotion|
+| product_id    | `<integer>`  | Describes the product on which the promotion is applied|
+
+## RESTful API Endpoints
+
+| Method         | URL | Details     |
+|-----------------|-----------|-----------------|
+| `POST`             | `/promotions` |  Create a new promotion      |
+| `GET`       | `/promotions/<int:promotion_id>` | Reads the promotion with id `promotion_id`  |
+| `POST`  | `/promotions/delete/<int:promotion_id>`  | Deletes the promotion with id `promotion_id` |
+| `GET`     | `/promotions`  | Lists all the promotions|
+| `PUT`   | `/promotions/<int:promotions_id>`  | Updates the promotion with id `promotion_id`|
+
+
+## License
+
+Copyright (c) 2016, 2024 [John Rofrano](https://www.linkedin.com/in/JohnRofrano/). All rights reserved.
+
+Licensed under the Apache License. See [LICENSE](LICENSE)
+
+This repository is part of the New York University (NYU) masters class: **CSCI-GA.2820-001 DevOps and Agile Methodologies** created and taught by [John Rofrano](https://cs.nyu.edu/~rofrano/), Adjunct Instructor, NYU Courant Institute, Graduate Division, Computer Science, and NYU Stern School of Business.
+
+## TODO
+<details>
+  <summary> ORIGINAL TEMPLATE</summary>
+  
+  This is a skeleton you can use to start your projects
 
 ## Overview
 
@@ -57,10 +94,4 @@ tests/                     - test cases package
 └── test_routes.py         - test suite for service routes
 ```
 
-## License
-
-Copyright (c) 2016, 2024 [John Rofrano](https://www.linkedin.com/in/JohnRofrano/). All rights reserved.
-
-Licensed under the Apache License. See [LICENSE](LICENSE)
-
-This repository is part of the New York University (NYU) masters class: **CSCI-GA.2820-001 DevOps and Agile Methodologies** created and taught by [John Rofrano](https://cs.nyu.edu/~rofrano/), Adjunct Instructor, NYU Courant Institute, Graduate Division, Computer Science, and NYU Stern School of Business.
+</details>
