@@ -5,8 +5,8 @@ Test Factory to make fake objects for testing
 from datetime import date
 
 import factory
-from factory.fuzzy import FuzzyDate, FuzzyInteger, FuzzyText
-from service.models import Promotion
+from factory.fuzzy import FuzzyDate, FuzzyChoice, FuzzyInteger, FuzzyText
+from service.models import Promotion, PromotionType
 
 
 class PromotionFactory(factory.Factory):
@@ -21,5 +21,13 @@ class PromotionFactory(factory.Factory):
     name = factory.Faker("first_name")
     start_date = FuzzyDate(date(2023, 1, 1))
     duration = FuzzyInteger(0, 101)
+    promotion_type = FuzzyChoice(
+        choices=[
+            PromotionType.AMOUNT_DISCOUNT,
+            PromotionType.PERCENTAGE_DISCOUNT,
+            PromotionType.BXGY,
+            PromotionType.UNKNOWN,
+        ]
+    )
     rule = FuzzyText(length=63)
     product_id = FuzzyInteger(0, 100)

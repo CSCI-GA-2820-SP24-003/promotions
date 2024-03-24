@@ -5,6 +5,7 @@ All of the models are stored in this module
 """
 
 import logging
+from enum import Enum
 from datetime import date
 from flask_sqlalchemy import SQLAlchemy
 
@@ -16,6 +17,15 @@ db = SQLAlchemy()
 
 class DataValidationError(Exception):
     """Used for an data validation errors when deserializing"""
+
+
+class PromotionType(Enum):
+    """Enumeration of valid PromotionTypes"""
+
+    AMOUNT_DISCOUNT = 0  # e.g. 30$ off
+    PERCENTAGE_DISCOUNT = 1  # e.g. 20% OFF
+    BXGY = 2  # Buy X get Y free
+    UNKNOWN = 3
 
 
 class Promotion(db.Model):
@@ -30,6 +40,11 @@ class Promotion(db.Model):
     name = db.Column(db.String(63), nullable=False)
     start_date = db.Column(db.Date(), nullable=False, default=date.today())
     duration = db.Column(db.Integer, nullable=False)
+    promotion_type = db.Column(
+        db.Enum(PromotionType),
+        nullable=False,
+        server_default=(PromotionType.UNKNOWN.name),
+    )
     rule = db.Column(db.String(63), nullable=False)
     product_id = db.Column(db.Integer, nullable=False)
 
@@ -93,6 +108,7 @@ class Promotion(db.Model):
             "name": self.name,
             "start_date": self.start_date.isoformat(),
             "duration": self.duration,
+            "promotion_type": self.promotion_type.name,  # convert enum to string
             "rule": self.rule,
             "product_id": self.product_id,
         }
@@ -114,6 +130,9 @@ class Promotion(db.Model):
                     "Invalid type for integer [duration]: "
                     + str(type(data["duration"]))
                 )
+            self.promotion_type = getattr(
+                PromotionType, data["promotion_type"]
+            )  # create enum from string
             self.rule = data["rule"]
             if isinstance(data["product_id"], int):
                 self.product_id = data["product_id"]
@@ -124,8 +143,8 @@ class Promotion(db.Model):
                 )
 
         # Todo: uncomment this code when tests can cover this
-        # except AttributeError as error:
-        #     raise DataValidationError("Invalid attribute: " + error.args[0]) from error
+        except AttributeError as error:
+            raise DataValidationError("Invalid attribute: " + error.args[0]) from error
         except KeyError as error:
             raise DataValidationError(
                 "Invalid Promotion: missing " + error.args[0]
@@ -168,3 +187,19 @@ class Promotion(db.Model):
         """Delete a Promotion by its ID"""
         logger.info("Processing delete with id %s ...", by_id)
         cls.query.filter(cls.id == by_id).delete()
+
+    @classmethod
+    def find_by_promotion_type(
+        cls, promotion_type: PromotionType = PromotionType.UNKNOWN
+    ) -> list:
+        """Returns all Pets by their PromotionType
+
+        :param promotion_type: values are ['AMOUNT_DISCOUNT', 'PERCENTAGE_DISCOUNT', 'BXGY', 'UNKNOWN']
+        :type available: enum
+
+        :return: a collection of Pets that are available
+        :rtype: list
+
+        """
+        logger.info("Processing promotion_type query for %s ...", promotion_type.name)
+        return cls.query.filter(cls.promotion_type == promotion_type)
