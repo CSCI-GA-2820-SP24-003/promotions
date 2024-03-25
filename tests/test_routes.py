@@ -127,13 +127,8 @@ class TestPromotionService(TestCase):
         # get the id of a promotion
         test_db = self._create_promotions(5)
         test_promotion_id = test_db[0].id
-        test_promotion_name = test_db[0].name
-        response = self.client.post(f"{BASE_URL}/delete/{test_promotion_id}")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = response.get_json()
-        self.assertEqual(data["name"], test_promotion_name)
-        response_again = self.client.post(f"{BASE_URL}/delete/{test_promotion_id}")
-        self.assertEqual(response_again.status_code, status.HTTP_404_NOT_FOUND)
+        response = self.client.delete(f"{BASE_URL}/{test_promotion_id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_list_promotion(self):  # maybe we dont need an input for the call
         """It should list all Promotions"""
