@@ -8,7 +8,7 @@ from unittest import TestCase
 from unittest.mock import patch
 from datetime import date
 from wsgi import app
-from service.models import Promotion, DataValidationError, db
+from service.models import Promotion, PromotionType, DataValidationError, db
 from tests.factories import PromotionFactory
 
 DATABASE_URI = os.getenv(
@@ -64,15 +64,16 @@ class TestPromotionModel(TestCaseBase):
             name="Happy_New_Year",
             start_date=date.fromisoformat("2023-12-29"),
             duration=5,
+            promotion_type=PromotionType.PERCENTAGE_DISCOUNT,
             rule="30'%'discount",
             product_id=1,
         )
         self.assertEqual(str(promotion), "<Promotion Happy_New_Year id=[None]>")
         self.assertTrue(promotion is not None)
         self.assertEqual(promotion.id, None)
-        # self.assertEqual(promotion.start_date, date.today())
         self.assertEqual(promotion.start_date, date.fromisoformat("2023-12-29"))
         self.assertEqual(promotion.duration, 5)
+        self.assertEqual(promotion.promotion_type, PromotionType.PERCENTAGE_DISCOUNT)
         self.assertEqual(promotion.rule, "30'%'discount")
         self.assertEqual(promotion.product_id, 1)
 
@@ -84,7 +85,8 @@ class TestPromotionModel(TestCaseBase):
             name="Happy_New_Year",
             start_date=date.fromisoformat("2023-12-29"),
             duration=5,
-            rule="30'%'discount",
+            promotion_type=PromotionType.PERCENTAGE_DISCOUNT,
+            rule="30'$'off",
             product_id=1,
         )
         self.assertTrue(promotion is not None)
@@ -173,6 +175,8 @@ class TestPromotionModel(TestCaseBase):
         self.assertEqual(date.fromisoformat(data["start_date"]), promotion.start_date)
         self.assertIn("duration", data)
         self.assertEqual(data["duration"], promotion.duration)
+        self.assertIn("promotion_type", data)
+        self.assertEqual(data["promotion_type"], promotion.promotion_type.name)
         self.assertIn("rule", data)
         self.assertEqual(data["rule"], promotion.rule)
         self.assertIn("product_id", data)
@@ -187,6 +191,7 @@ class TestPromotionModel(TestCaseBase):
         self.assertEqual(promotion.id, None)
         self.assertEqual(promotion.name, data["name"])
         self.assertEqual(promotion.start_date, date.fromisoformat(data["start_date"]))
+        self.assertEqual(promotion.promotion_type.name, data["promotion_type"])
         self.assertEqual(promotion.rule, data["rule"])
         self.assertEqual(promotion.duration, data["duration"])
         self.assertEqual(promotion.product_id, data["product_id"])
@@ -216,6 +221,14 @@ class TestPromotionModel(TestCaseBase):
         test_promotion = PromotionFactory()
         data = test_promotion.serialize()
         data["product_id"] = "abc"  # wrong case
+        promotion = Promotion()
+        self.assertRaises(DataValidationError, promotion.deserialize, data)
+
+    def test_deserialize_bad_promotion_type(self):
+        """It should not deserialize a bad promotion_type attribute"""
+        test_promotion = PromotionFactory()
+        data = test_promotion.serialize()
+        data["promotion_type"] = "unknown"  # wrong case
         promotion = Promotion()
         self.assertRaises(DataValidationError, promotion.deserialize, data)
 
@@ -269,6 +282,7 @@ class TestModelQueries(TestCaseBase):
         self.assertEqual(promotion.name, promotions[1].name)
         self.assertEqual(promotion.start_date, promotions[1].start_date)
         self.assertEqual(promotion.duration, promotions[1].duration)
+        self.assertEqual(promotion.promotion_type, promotions[1].promotion_type)
         self.assertEqual(promotion.rule, promotions[1].rule)
         self.assertEqual(promotion.product_id, promotions[1].product_id)
 
@@ -283,3 +297,21 @@ class TestModelQueries(TestCaseBase):
         self.assertEqual(found.count(), count)
         for promotion in found:
             self.assertEqual(promotion.name, name)
+
+    def test_find_by_promotion_type(self):
+        """It should Find Promotions by Gender"""
+        promotions = PromotionFactory.create_batch(10)
+        for promotion in promotions:
+            promotion.create()
+        promotion_type = promotions[0].promotion_type
+        count = len(
+            [
+                promotion
+                for promotion in promotions
+                if promotion.promotion_type == promotion_type
+            ]
+        )
+        found = Promotion.find_by_promotion_type(promotion_type)
+        self.assertEqual(found.count(), count)
+        for promotion in found:
+            self.assertEqual(promotion.promotion_type, promotion_type)
