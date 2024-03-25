@@ -93,7 +93,7 @@ def get_promotions(promotion_id):
 ######################################################################
 # DELETE A PROMOTION
 ######################################################################
-@app.route("/promotions/delete/<int:promotion_id>", methods=["POST"])
+@app.route("/promotions/<int:promotion_id>", methods=["DELETE"])
 def delete_promotions(promotion_id):
     """
     Delete a single Promotion
@@ -103,15 +103,8 @@ def delete_promotions(promotion_id):
     Otherwise return 404 Not Found
     """
     app.logger.info("Request to delete promotion with id: %s", promotion_id)
-    promotion = Promotion.find(promotion_id)
-    if not promotion:
-        error(
-            status.HTTP_404_NOT_FOUND,
-            f"Promotion with id '{promotion_id}' was not found.",
-        )
     Promotion.delete_by_id(promotion_id)
-    app.logger.info("Deleted Promotion: %s", promotion.name)
-    return jsonify(promotion.serialize()), status.HTTP_200_OK
+    return "", status.HTTP_204_NO_CONTENT
 
 
 ######################################################################
