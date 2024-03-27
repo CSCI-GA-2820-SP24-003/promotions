@@ -33,10 +33,40 @@ from service.common import status  # HTTP Status Codes
 @app.route("/")
 def index():
     """Root URL response"""
-    return (
-        "Reminder: return some useful information in json format about the service here",
-        status.HTTP_200_OK,
-    )
+    data = {
+        "version": "1.0.0",
+        "description": "A RESTful API for managing promotions shown to users! "
+        "Supports create, read, update, delete, and list operations!",
+        "endpoints": [
+            {
+                "method": "POST",
+                "url": "/promotions",
+                "details": "Create a new promotion",
+            },
+            {
+                "method": "GET",
+                "url": "/promotions/<int:promotion_id>",
+                "details": "Read the promotion with id <promotion_id>",
+            },
+            {
+                "method": "DELETE",
+                "url": "/promotions/<int:promotion_id>",
+                "details": "Delete the promotion with id <promotion_id>",
+            },
+            {
+                "method": "GET",
+                "url": "/promotions",
+                "details": "List all the promotions",
+            },
+            {
+                "method": "PUT",
+                "url": "/promotions/<int:promotion_id>",
+                "details": "Update the promotion with id <promotion_id>",
+            },
+        ],
+    }
+    json_response = jsonify(data)
+    return (json_response, status.HTTP_200_OK)
 
 
 ######################################################################
