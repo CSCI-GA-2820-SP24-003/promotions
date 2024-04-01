@@ -173,6 +173,13 @@ def update_promotions(promotion_id):
             status.HTTP_404_NOT_FOUND,
             f"Promotion with id '{promotion_id}' was not found.",
         )
+    # Ensure 'id' is not in the request body
+    request_data = request.get_json()
+    if 'id' in request_data:
+        error(
+            status.HTTP_400_BAD_REQUEST,
+            "Updating 'id' field is not allowed.",
+        )
 
     promotion.deserialize(request.get_json())
     promotion.update()
