@@ -90,16 +90,16 @@ class Promotion(db.Model):
             logger.error("Error deleting record: %s", self)
             raise DataValidationError(e) from e
 
-    def list_all():
-        """Retrieve all promotions. Returns: List[Promotion]: A list of all promotions."""
-        logger.info("Listing all Promotions")
-        try:
-            promotions = Promotion.all()
-            db.session.commit()
-            return promotions
-        except Exception as e:
-            logger.error("Error listing records")
-            raise DataValidationError(e) from e
+    # def list_all():
+    #     """Retrieve all promotions. Returns: List[Promotion]: A list of all promotions."""
+    #     logger.info("Listing all Promotions")
+    #     try:
+    #         promotions = Promotion.all()
+    #         db.session.commit()
+    #         return promotions
+    #     except Exception as e:
+    #         logger.error("Error listing records")
+    #         raise DataValidationError(e) from e
 
     def serialize(self):
         """Serializes a Promotion into a dictionary"""
@@ -160,7 +160,7 @@ class Promotion(db.Model):
     ##################################################
 
     @classmethod
-    def all(cls):
+    def all(cls) -> list:
         """Returns all of the Promotions in the database"""
         logger.info("Processing all Promotions")
         return cls.query.all()
