@@ -146,7 +146,7 @@ class TestPromotionService(TestCase):
         logging.debug("Response data = %s", data)
         self.assertIn("was not found", data["message"])
 
-    # TODO: I replace this test with the test copied from the sample, since this code can not work after I refine the database
+    # I replace this test with the test copied from the sample, since this code can not work after I refine the database
     # def test_update_promotion(self):
     #     """It should Update an existing Promotion"""
     #     # Step 1: Create a promotion to update
