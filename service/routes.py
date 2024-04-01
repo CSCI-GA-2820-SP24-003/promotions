@@ -147,8 +147,9 @@ def list_promotions():
     This endpoint will return a list of all Promotions
     """
     app.logger.info("Request to List all promotions")
-    # should i deserialize first?
-    promotions = Promotion.list_all()
+    promotions = []
+
+    promotions = Promotion.all()
     serialized_promotions = [promotion.serialize() for promotion in promotions]
     app.logger.info("Promotions Listed")
     return jsonify(serialized_promotions), status.HTTP_200_OK
