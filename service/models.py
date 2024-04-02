@@ -6,7 +6,7 @@ All of the models are stored in this module
 
 import logging
 from enum import Enum
-from datetime import date
+from datetime import date, datetime
 from flask_sqlalchemy import SQLAlchemy
 
 logger = logging.getLogger("flask.app")
@@ -202,3 +202,22 @@ class Promotion(db.Model):
         """
         logger.info("Processing promotion_type query for %s ...", promotion_type.name)
         return cls.query.filter(cls.promotion_type == promotion_type)
+
+    @classmethod
+    def find_by_filters(cls, product_id, start_date, promotion_type):
+        """Returns promotions by product id, start date, and type"""
+        logger.info(
+            "Processing product id query for product %s start date %s type... %s",
+            product_id,
+            start_date,
+            promotion_type,
+        )
+        res = cls.query
+        if product_id:
+            res = res.filter(cls.product_id == product_id)
+        if start_date:
+            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+            res = res.filter(cls.start_date == start_date)
+        if promotion_type:
+            res = res.filter(cls.promotion_type == PromotionType[promotion_type])
+        return res
