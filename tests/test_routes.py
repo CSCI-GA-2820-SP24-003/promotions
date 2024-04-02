@@ -138,6 +138,45 @@ class TestPromotionService(TestCase):
         promotions = response.get_json()
         self.assertEqual(len(promotions), 2)
 
+    def test_list_promotions_by_product_id(self):
+        """This should list all promotions with given product id"""
+        test_db = self._create_promotions(5)
+        test_product = test_db[0].product_id
+        count = 0
+        for item in test_db:
+            if item.product_id == test_product:
+                count = count + 1
+        response = self.client.get(f"{BASE_URL}?product_id={test_product}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        promotions = response.get_json()
+        self.assertEqual(len(promotions), count)
+
+    def test_list_promotions_by_promotion_type(self):
+        """This should list all promotions with given type"""
+        test_db = self._create_promotions(5)
+        test_type = test_db[0].promotion_type.name
+        count = 0
+        for item in test_db:
+            if item.promotion_type.name == test_type:
+                count = count + 1
+        response = self.client.get(f"{BASE_URL}?promotion_type={test_type}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        promotions = response.get_json()
+        self.assertEqual(len(promotions), count)
+
+    def test_list_promotions_by_start_date(self):
+        """This should list all promotions with given start date"""
+        test_db = self._create_promotions(5)
+        test_date = test_db[0].start_date
+        count = 0
+        for item in test_db:
+            if item.start_date == test_date:
+                count = count + 1
+        response = self.client.get(f"{BASE_URL}?start_date={test_date}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        promotions = response.get_json()
+        self.assertEqual(len(promotions), count)
+
     def test_get_promotion_not_found(self):
         """It should not Get a Promotion thats not found"""
         response = self.client.get(f"{BASE_URL}/0")

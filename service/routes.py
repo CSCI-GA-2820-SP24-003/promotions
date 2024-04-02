@@ -148,8 +148,13 @@ def list_promotions():
     """
     app.logger.info("Request to List all promotions")
     promotions = []
-
-    promotions = Promotion.all()
+    product_id = request.args.get("product_id", type=int)
+    start_date = request.args.get("start_date")
+    promotion_type = request.args.get("promotion_type")
+    if product_id or start_date or promotion_type:
+        promotions = Promotion.find_by_filters(product_id, start_date, promotion_type)
+    else:
+        promotions = Promotion.all()
     serialized_promotions = [promotion.serialize() for promotion in promotions]
     app.logger.info("Promotions Listed")
     return jsonify(serialized_promotions), status.HTTP_200_OK
