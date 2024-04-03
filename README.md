@@ -1,4 +1,4 @@
-# NYU DevOps Spring 23 Promotions Squad
+# NYU DevOps Spring 24 Promotions Squad
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://python.org/)
@@ -12,12 +12,13 @@ This is the Promotions repository of the back-end of an e-Commerce Website as a 
 
 | Column          | Data type | Details     |
 |-----------------|-----------|-----------------|
-| id              | `<integer>` | Primary key       |
+| id              | `<integer>` | Primary key which is an unique identifier for the promotion      |
 | name        | `<string>` | Name of the promotion |
 | start_date  | `<date>`  | The start date of the promotion|
-| duration       | `<integer>`  | No. of days for which the promotion is valid |
+| duration       | `<integer>`  | Number of days for which the promotion is valid |
 | rule      | `<string>`  | Rule describing the promotion|
 | product_id    | `<integer>`  | Describes the product on which the promotion is applied|
+| promotion_type    | `<enum>`  | Describes the type of promotion-AMOUNT_DISCOUNT,PERCENTAGE_DISCOUNT or BXGY|
 
 ## RESTful API Endpoints
 
@@ -25,9 +26,10 @@ This is the Promotions repository of the back-end of an e-Commerce Website as a 
 |-----------------|-----------|-----------------|
 | `POST`             | `/promotions` |  Create a new promotion      |
 | `GET`       | `/promotions/<int:promotion_id>` | Reads the promotion with id `promotion_id`  |
-| `POST`  | `/promotions/delete/<int:promotion_id>`  | Deletes the promotion with id `promotion_id` |
-| `GET`     | `/promotions`  | Lists all the promotions|
+| `DELETE`  | `/promotions/<int:promotion_id>`  | Deletes the promotion with id `promotion_id` |
+| `GET`     | `/promotions`  | Lists all the promotions. We can also query or filter the promotions using promotion_type,start_date and product_id|
 | `PUT`   | `/promotions/<int:promotions_id>`  | Updates the promotion with id `promotion_id`|
+
 
 
 ## License
