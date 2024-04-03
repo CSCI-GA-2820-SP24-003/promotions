@@ -3,6 +3,7 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://python.org/)
 [![Build Status](https://github.com/CSCI-GA-2820-SP24-003/promotions/actions/workflows/ci.yml/badge.svg)](https://github.com/CSCI-GA-2820-SP24-003/promotions/actions)
+[![codecov](https://codecov.io/gh/CSCI-GA-2820-SP24-003/promotions/graph/badge.svg?token=Y8JOEKTXJX)](https://codecov.io/gh/CSCI-GA-2820-SP24-003/promotions)
 
 ## Overview
 This is the Promotions repository of the back-end of an e-Commerce Website as a collection of RESTful services. The Promotions Squad handles deals on products (Eg: 20 % discount, buy 1 get 1 etc.)
