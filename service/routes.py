@@ -30,43 +30,49 @@ from service.common import status  # HTTP Status Codes
 ######################################################################
 # GET INDEX
 ######################################################################
+# @app.route("/")
+# def index():
+#     """Root URL response"""
+#     data = {
+#         "version": "1.0.0",
+#         "description": "A RESTful API for managing promotions shown to users! "
+#         "Supports create, read, update, delete, and list operations!",
+#         "endpoints": [
+#             {
+#                 "method": "POST",
+#                 "url": "/promotions",
+#                 "details": "Create a new promotion",
+#             },
+#             {
+#                 "method": "GET",
+#                 "url": "/promotions/<int:promotion_id>",
+#                 "details": "Read the promotion with id <promotion_id>",
+#             },
+#             {
+#                 "method": "DELETE",
+#                 "url": "/promotions/<int:promotion_id>",
+#                 "details": "Delete the promotion with id <promotion_id>",
+#             },
+#             {
+#                 "method": "GET",
+#                 "url": "/promotions",
+#                 "details": "List all the promotions",
+#             },
+#             {
+#                 "method": "PUT",
+#                 "url": "/promotions/<int:promotion_id>",
+#                 "details": "Update the promotion with id <promotion_id>",
+#             },
+#         ],
+#     }
+#     json_response = jsonify(data)
+#     return (json_response, status.HTTP_200_OK)
+
+
 @app.route("/")
 def index():
-    """Root URL response"""
-    data = {
-        "version": "1.0.0",
-        "description": "A RESTful API for managing promotions shown to users! "
-        "Supports create, read, update, delete, and list operations!",
-        "endpoints": [
-            {
-                "method": "POST",
-                "url": "/promotions",
-                "details": "Create a new promotion",
-            },
-            {
-                "method": "GET",
-                "url": "/promotions/<int:promotion_id>",
-                "details": "Read the promotion with id <promotion_id>",
-            },
-            {
-                "method": "DELETE",
-                "url": "/promotions/<int:promotion_id>",
-                "details": "Delete the promotion with id <promotion_id>",
-            },
-            {
-                "method": "GET",
-                "url": "/promotions",
-                "details": "List all the promotions",
-            },
-            {
-                "method": "PUT",
-                "url": "/promotions/<int:promotion_id>",
-                "details": "Update the promotion with id <promotion_id>",
-            },
-        ],
-    }
-    json_response = jsonify(data)
-    return (json_response, status.HTTP_200_OK)
+    """Base URL for our service"""
+    return app.send_static_file("index.html")
 
 
 ######################################################################
@@ -123,18 +129,37 @@ def get_promotions(promotion_id):
 ######################################################################
 # DELETE A PROMOTION
 ######################################################################
+# @app.route("/promotions/<int:promotion_id>", methods=["DELETE"])
+# def delete_promotions(promotion_id):
+#     """
+#     Delete a single Promotion
+
+#     This endpoint will return the deleted promotion if success
+
+
+#     Otherwise return 404 Not Found
+#     """
+#     app.logger.info("Request to delete promotion with id: %s", promotion_id)
+#     Promotion.delete_by_id(promotion_id)
+#     return "", status.HTTP_204_NO_CONTENT
+
+
 @app.route("/promotions/<int:promotion_id>", methods=["DELETE"])
 def delete_promotions(promotion_id):
     """
-    Delete a single Promotion
+    Delete a Promotion
 
-    This endpoint will return the deleted promotion if success
-
-    Otherwise return 404 Not Found
+    This endpoint will delete a Promotion based the id specified in the path
     """
-    app.logger.info("Request to delete promotion with id: %s", promotion_id)
-    Promotion.delete_by_id(promotion_id)
-    return "", status.HTTP_204_NO_CONTENT
+    app.logger.info("Request to Delete a promotion with id [%s]", promotion_id)
+    # Delete the Promotion if it exists
+    promotion = Promotion.find(promotion_id)
+    if promotion:
+        app.logger.info("Promotion with ID: %d found.", promotion.id)
+        promotion.delete()
+
+    app.logger.info("Promotion with ID: %d delete complete.", promotion_id)
+    return {}, status.HTTP_204_NO_CONTENT
 
 
 ######################################################################
