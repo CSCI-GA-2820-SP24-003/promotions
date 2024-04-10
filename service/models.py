@@ -181,11 +181,11 @@ class Promotion(db.Model):
         logger.info("Processing name query for %s ...", name)
         return cls.query.filter(cls.name == name)
 
-    @classmethod
-    def delete_by_id(cls, by_id):
-        """Delete a Promotion by its ID"""
-        logger.info("Processing delete with id %s ...", by_id)
-        cls.query.filter(cls.id == by_id).delete()
+    # @classmethod
+    # def delete_by_id(cls, by_id):
+    #     """Delete a Promotion by its ID"""
+    #     logger.info("Processing delete with id %s ...", by_id)
+    #     cls.query.filter(cls.id == by_id).delete()
 
     @classmethod
     def find_by_promotion_type(

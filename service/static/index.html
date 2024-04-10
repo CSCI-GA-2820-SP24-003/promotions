@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Promotions REST API Service</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="static/images/newapp-icon.png">
+    <link rel="stylesheet" href="static/css/cerulean_bootstrap.min.css">
+    <style>
+      .page-header h1 {
+          text-align: center;
+      }
+  </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header">
+          <h1>Promotions REST API Service</h1>
+      </div>
+
+      <!-- Flash Message -->
+      <div class="table-responsive">
+        <table class="table">
+          <tr><td>Status:</td><td><span id="flash_message"></span></td></tr>
+        </table>
+      </div>
+
+      <!-- FORM -->
+      <div class="col-md-12" id="form_data">
+        <h3 style="text-align: center;">Create, Retrieve, Update,Delete & List Promotions:</h3>
+        <div class="well">
+          <div class="form-horizontal">
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="promotion_id">Promotion ID:</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" id="promotion_id" placeholder="Enter ID of Promotion">
+              </div>
+              <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary" id="retrieve-btn">Retrieve</button>
+                <button type="submit" class="btn btn-danger" id="delete-btn">Delete</button>
+              </div>
+            </div>
+          </div> <!-- form horizontal -->
+
+          <div class="form-horizontal">
+
+            <!-- PROMOTION NAME -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="promotion_name">Promotion Name:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="promotion_name" placeholder="Enter name for Promotion">
+              </div>
+            </div>
+
+            <!-- PROMOTION TYPE -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="promotion_type">Promotion Type:</label>
+              <div class="col-sm-10">
+                <select class="form-control" id="promotion_type">
+                  <option value="" disabled selected>Select Promotion Type</option>
+                  <option value="AMOUNT_DISCOUNT">Amount Discount</option>
+                  <option value="PERECENTAGE_DISCOUNT">Percentage Discount</option>
+                  <option value="BXGY">Buy X Get Y</option>
+                  <option value="UNKNOWN">Unknown</option>
+              </select>
+              </div>
+            </div>
+
+             <!-- PRODUCT ID -->
+             <div class="form-group">
+              <label class="control-label col-sm-2" for="product_id">Product ID:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="product_id" placeholder="Enter Product id">
+              </div>
+            </div>
+
+            <!-- START DATE -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="promotion_start_date">Start Date:</label>
+              <div class="col-sm-10">
+                <input type="date" class="form-control" id="promotion_start_date" placeholder="2020-04-01">
+              </div>
+            </div>
+
+             <!-- DURATION -->
+             <div class="form-group">
+              <label class="control-label col-sm-2" for="promotion_duration">Promotion Duration:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="promotion_duration" placeholder="Enter duration of promotion">
+              </div>
+            </div>
+
+             <!-- RULE-->
+             <div class="form-group">
+              <label class="control-label col-sm-2" for="promotion_rule">Promotion Rule:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="promotion_rule" placeholder="Enter the promotion rule">
+              </div>
+            </div>
+            
+            <!-- SUBMIT BUTTONS -->
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary" id="search-btn">Search</button>
+                <button type="submit" class="btn btn-info" id="clear-btn">Clear</button>
+                <button type="submit" class="btn btn-success" id="create-btn">Create</button>
+                <button type="submit" class="btn btn-warning" id="update-btn">Update</button>
+                <button type="button" class="btn btn-info" id="clear-table-btn">Clear Search Table</button>
+              </div>
+            </div>
+          </div> <!-- form horizontal -->
+        </div> <!-- end well -->
+      </div> <!-- end Form -->
+
+      <!-- Search Results -->
+      <div class="table-responsive col-md-12" id="search_results">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th class="col-md-1">ID</th>
+            <th class="col-md-3">Name</th>
+            <th class="col-md-2">Promotion Type</th>
+            <th class="col-md-1">Product ID</th>
+            <th class="col-md-2">Start Date</th>
+            <th class="col-md-1">Duration</th>
+            <th class="col-md-3">Rule</th>
+
+          </tr>
+          </thead>
+        </table>
+      </div>
+
+      <footer>
+        <br><br>
+        <p>&copy; NYU DevOps Company 2022</p>
+      </footer>
+
+    </div> <!-- container -->
+
+  <script type="text/javascript" src = "static/js/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src = "static/js/bootstrap.min.js"></script>
+
+  <!-- YOUR REST API -->
+  <script type="text/javascript" src="static/js/rest_api.js"></script>
+
+  </body>
+</html>
