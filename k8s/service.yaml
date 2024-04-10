@@ -3,9 +3,10 @@ kind: Service
 metadata:
   name: promotion
 spec:
-  type: ClusterIP
   selector:
     app: promotion
+  type: ClusterIP
+  internalTrafficPolicy: Local
   ports:
     - name: http
       protocol: TCP
