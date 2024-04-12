@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: promotion
+  name: promotions
   labels:
-    app: promotion
+    app: promotions
 spec:
   replicas: 2
   strategy:
@@ -13,19 +13,19 @@ spec:
       maxUnavailable: 50%
   selector:
     matchLabels:
-      app: promotion
+      app: promotions
   template:
     metadata:
       labels:
-        app: promotion
+        app: promotions
     spec:
       imagePullSecrets:
       - name: all-icr-io
       restartPolicy: Always
       containers:
-      - name: promotion
-        # image: cluster-registry:32000/promotion:1.0
-        image: promotion
+      - name: promotions
+        # image: cluster-registry:32000/promotions:1.0
+        image: promotions
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
