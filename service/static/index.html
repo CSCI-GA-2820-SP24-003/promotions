@@ -39,6 +39,8 @@
               <div class="col-sm-4">
                 <button type="submit" class="btn btn-primary" id="retrieve-btn">Retrieve</button>
                 <button type="submit" class="btn btn-danger" id="delete-btn">Delete</button>
+                <button type="submit" class="btn btn-warning" id="activate-btn">Activate</button>
+                <button type="submit" class="btn btn-warning" id="deactivate-btn">Deactivate</button>
               </div>
             </div>
           </div> <!-- form horizontal -->
@@ -60,7 +62,7 @@
                 <select class="form-control" id="promotion_type">
                   <option value="" disabled selected>Select Promotion Type</option>
                   <option value="AMOUNT_DISCOUNT">Amount Discount</option>
-                  <option value="PERECENTAGE_DISCOUNT">Percentage Discount</option>
+                  <option value="PERCENTAGE_DISCOUNT">Percentage Discount</option>
                   <option value="BXGY">Buy X Get Y</option>
                   <option value="UNKNOWN">Unknown</option>
               </select>
@@ -96,6 +98,18 @@
               <label class="control-label col-sm-2" for="promotion_rule">Promotion Rule:</label>
               <div class="col-sm-10">
                 <input type="text" class="form-control" id="promotion_rule" placeholder="Enter the promotion rule">
+              </div>
+            </div>
+
+             <!-- STATUS -->
+             <div class="form-group">
+              <label class="control-label col-sm-2" for="status">Status:</label>
+              <div class="col-sm-10">
+                <select class="form-control" id="status">
+                  <option value="" disabled selected>Select status</option>
+                  <option value="true">true</option>
+                  <option value="false">false</option>
+              </select>
               </div>
             </div>
             
