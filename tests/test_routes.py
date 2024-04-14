@@ -306,11 +306,6 @@ class TestPromotionService(TestCase):
             f"{BASE_URL}/{new_promotion_id}", json=non_existing_promotion
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
-        # response = self.client.post(f"{BASE_URL}/0")
-        # self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        # data = response.get_json()
-        # logging.debug("Response data = %s", data)
-        # self.assertIn("was not found", data["message"])
 
 
 ######################################################################
