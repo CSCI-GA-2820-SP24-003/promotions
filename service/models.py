@@ -92,16 +92,17 @@ class Promotion(db.Model):
             logger.error("Error deleting record: %s", self)
             raise DataValidationError(e) from e
 
-    # def list_all():
-    #     """Retrieve all promotions. Returns: List[Promotion]: A list of all promotions."""
-    #     logger.info("Listing all Promotions")
-    #     try:
-    #         promotions = Promotion.all()
-    #         db.session.commit()
-    #         return promotions
-    #     except Exception as e:
-    #         logger.error("Error listing records")
-    #         raise DataValidationError(e) from e
+    def activate(self):
+        """Activates a Promotion by setting status to True"""
+        logger.info("Activate Promotion with Promotion Id %d", self.id)
+        self.status = True
+        db.session.commit()
+
+    def deactivate(self):
+        """Deactivates a Promotion by setting status to False"""
+        logger.info("Deactivate Promotion with Promotion Id %d", self.id)
+        self.status = False
+        db.session.commit()
 
     def serialize(self):
         """Serializes a Promotion into a dictionary"""

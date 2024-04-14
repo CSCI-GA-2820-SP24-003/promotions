@@ -145,6 +145,24 @@ class TestPromotionModel(TestCaseBase):
         promotion.id = None
         self.assertRaises(DataValidationError, promotion.update)
 
+    def test_activate_a_promotion(self):
+        """It should Activate a Promotion"""
+        promotion = PromotionFactory()
+        promotion.status = False
+        promotion.create()
+        promotion.activate()
+        activated_promotion = Promotion.find(promotion.id)
+        self.assertEqual(activated_promotion.status, True)
+
+    def test_deactivate_a_promotion(self):
+        """It should Deactivate a Promotion"""
+        promotion = PromotionFactory()
+        promotion.status = True
+        promotion.create()
+        promotion.deactivate()
+        activated_promotion = Promotion.find(promotion.id)
+        self.assertEqual(activated_promotion.status, False)
+
     def test_delete_a_promotion(self):
         """It should Delete a Promotion"""
         promotion = PromotionFactory()
