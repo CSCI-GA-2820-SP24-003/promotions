@@ -84,21 +84,6 @@ $(function () {
     // ****************************************
 
     $("#update-btn").click(function () {
-
-        // let promotion_id = $("#promotion_id").val();
-        // let name = $("#promotion_name").val();
-        // let category = $("#promotion_category").val();
-        // let available = $("#promotion_available").val() == "true";
-        // let gender = $("#promotion_gender").val();
-        // let birthday = $("#promotion_birthday").val();
-
-        // let data = {
-        //     "name": name,
-        //     "category": category,
-        //     "available": available,
-        //     "gender": gender,
-        //     "birthday": birthday
-        // };
         let id=parseInt($("#promotion_id").val());
         let name = $("#promotion_name").val();
         let type = $("#promotion_type").val();
@@ -258,10 +243,10 @@ $(function () {
             table += '</tbody></table>';
             $("#search_results").append(table);
 
-            // // copy the first result to the form
-            // if (firstPromotion != "") {
-            //     update_form_data(firstPromotion)
-            // }
+            // copy the first result to the form
+            if (firstPromotion != "") {
+                update_form_data(firstPromotion)
+            }
 
             flash_message("Success")
         });
