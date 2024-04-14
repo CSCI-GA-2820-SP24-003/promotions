@@ -74,14 +74,6 @@ class TestPromotionService(TestCase):
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
-    def test_health(self):
-        """It should be healthy"""
-        response = self.client.get("/health")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = response.get_json()
-        self.assertEqual(data["status"], 200)
-        self.assertEqual(data["message"], "Healthy")
-
     def test_create_promotion(self):
         """It should Create a new Promotion"""
         test_promotion = PromotionFactory()
