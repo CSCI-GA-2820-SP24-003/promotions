@@ -105,6 +105,7 @@ class TestPromotionService(TestCase):
         )
         self.assertEqual(new_promotion["rule"], test_promotion.rule)
         self.assertEqual(new_promotion["product_id"], test_promotion.product_id)
+        self.assertEqual(new_promotion["status"], test_promotion.status)
 
         # Check that the location header was correct
         response = self.client.get(location)
@@ -120,6 +121,7 @@ class TestPromotionService(TestCase):
         )
         self.assertEqual(new_promotion["rule"], test_promotion.rule)
         self.assertEqual(new_promotion["product_id"], test_promotion.product_id)
+        self.assertEqual(new_promotion["status"], test_promotion.status)
 
     def test_get_promotion(self):
         """It should Get a single Promotion"""

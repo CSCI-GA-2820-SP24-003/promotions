@@ -31,3 +31,4 @@ class PromotionFactory(factory.Factory):
     )
     rule = FuzzyText(length=63)
     product_id = FuzzyInteger(0, 100)
+    status = FuzzyChoice(choices=[True, False])

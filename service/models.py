@@ -33,6 +33,7 @@ class Promotion(db.Model):
     Class that represents a Promotion
     """
 
+    # pylint: disable=too-many-instance-attributes
     ##################################################
     # Table Schema
     ##################################################
@@ -47,6 +48,7 @@ class Promotion(db.Model):
     )
     rule = db.Column(db.String(63), nullable=False)
     product_id = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.Boolean, default=True, nullable=False)
 
     def __repr__(self):
         return f"<Promotion {self.name} id=[{self.id}]>"
@@ -111,6 +113,7 @@ class Promotion(db.Model):
             "promotion_type": self.promotion_type.name,  # convert enum to string
             "rule": self.rule,
             "product_id": self.product_id,
+            "status": self.status,
         }
 
     def deserialize(self, data):
@@ -141,7 +144,7 @@ class Promotion(db.Model):
                     "Invalid type for integer [product_id]: "
                     + str(type(data["product_id"]))
                 )
-
+            self.status = data.get("status", True)
         except AttributeError as error:
             raise DataValidationError("Invalid attribute: " + error.args[0]) from error
         except KeyError as error:
