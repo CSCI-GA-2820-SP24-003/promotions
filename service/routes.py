@@ -225,6 +225,60 @@ def update_promotions(promotion_id):
 
 
 ######################################################################
+# ACTIVATE AN EXISTING PROMOTION
+######################################################################
+@app.route("/promotions/<int:promotion_id>/activate", methods=["PUT"])
+def activate_promotions(promotion_id):
+    """
+    Activates a Promotion
+
+    This endpoint will activate a Promotion
+    """
+    app.logger.info("Request to activate the promotion with id: %s", promotion_id)
+    promotion = Promotion.find(promotion_id)
+    if not promotion:
+        error(
+            status.HTTP_404_NOT_FOUND,
+            f"Promotion with id '{promotion_id}' was not found.",
+        )
+    promotion.activate()
+    # Commit changes to the database
+    db.session.commit()
+    app.logger.info("Promotion with ID [%s] activated.", promotion.id)
+    return jsonify(promotion.serialize()), status.HTTP_200_OK
+
+
+######################################################################
+# DEACTIVATE AN EXISTING PROMOTION
+######################################################################
+@app.route("/promotions/<int:promotion_id>/deactivate", methods=["PUT"])
+def deactivate_promotions(promotion_id):
+    """
+    Deactivates a Promotion
+
+    This endpoint will deactivate a Promotion
+    """
+    app.logger.info("Request to deactivate the promotion with id: %s", promotion_id)
+    # check_content_type("application/json")
+
+    promotion = Promotion.find(promotion_id)
+    if not promotion:
+        error(
+            status.HTTP_404_NOT_FOUND,
+            f"Promotion with id '{promotion_id}' was not found.",
+        )
+
+    # promotion.deserialize(request.get_json())
+    promotion.deactivate()
+
+    # Commit changes to the database
+    db.session.commit()
+
+    app.logger.info("Promotion with ID [%s] deactivated.", promotion.id)
+    return jsonify(promotion.serialize()), status.HTTP_200_OK
+
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 

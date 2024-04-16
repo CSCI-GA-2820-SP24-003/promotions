@@ -33,6 +33,7 @@ class Promotion(db.Model):
     Class that represents a Promotion
     """
 
+    # pylint: disable=too-many-instance-attributes
     ##################################################
     # Table Schema
     ##################################################
@@ -47,6 +48,7 @@ class Promotion(db.Model):
     )
     rule = db.Column(db.String(63), nullable=False)
     product_id = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.Boolean, default=True, nullable=False)
 
     def __repr__(self):
         return f"<Promotion {self.name} id=[{self.id}]>"
@@ -90,16 +92,17 @@ class Promotion(db.Model):
             logger.error("Error deleting record: %s", self)
             raise DataValidationError(e) from e
 
-    # def list_all():
-    #     """Retrieve all promotions. Returns: List[Promotion]: A list of all promotions."""
-    #     logger.info("Listing all Promotions")
-    #     try:
-    #         promotions = Promotion.all()
-    #         db.session.commit()
-    #         return promotions
-    #     except Exception as e:
-    #         logger.error("Error listing records")
-    #         raise DataValidationError(e) from e
+    def activate(self):
+        """Activates a Promotion by setting status to True"""
+        logger.info("Activate Promotion with Promotion Id %d", self.id)
+        self.status = True
+        db.session.commit()
+
+    def deactivate(self):
+        """Deactivates a Promotion by setting status to False"""
+        logger.info("Deactivate Promotion with Promotion Id %d", self.id)
+        self.status = False
+        db.session.commit()
 
     def serialize(self):
         """Serializes a Promotion into a dictionary"""
@@ -111,6 +114,7 @@ class Promotion(db.Model):
             "promotion_type": self.promotion_type.name,  # convert enum to string
             "rule": self.rule,
             "product_id": self.product_id,
+            "status": self.status,
         }
 
     def deserialize(self, data):
@@ -141,7 +145,7 @@ class Promotion(db.Model):
                     "Invalid type for integer [product_id]: "
                     + str(type(data["product_id"]))
                 )
-
+            self.status = data.get("status", True)
         except AttributeError as error:
             raise DataValidationError("Invalid attribute: " + error.args[0]) from error
         except KeyError as error:

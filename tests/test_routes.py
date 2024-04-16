@@ -105,6 +105,7 @@ class TestPromotionService(TestCase):
         )
         self.assertEqual(new_promotion["rule"], test_promotion.rule)
         self.assertEqual(new_promotion["product_id"], test_promotion.product_id)
+        self.assertEqual(new_promotion["status"], test_promotion.status)
 
         # Check that the location header was correct
         response = self.client.get(location)
@@ -120,6 +121,7 @@ class TestPromotionService(TestCase):
         )
         self.assertEqual(new_promotion["rule"], test_promotion.rule)
         self.assertEqual(new_promotion["product_id"], test_promotion.product_id)
+        self.assertEqual(new_promotion["status"], test_promotion.status)
 
     def test_get_promotion(self):
         """It should Get a single Promotion"""
@@ -241,6 +243,69 @@ class TestPromotionService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         updated_promotion = response.get_json()
         self.assertEqual(updated_promotion["rule"], "unknown")
+
+    def test_activate_promotion(self):
+        """It should Activate an existing Promotion"""
+        test_promotion = PromotionFactory()
+        response = self.client.post(BASE_URL, json=test_promotion.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        # Activate the promotion
+        new_promotion = response.get_json()
+        logging.debug(new_promotion)
+        new_promotion["status"] = False
+        promotion_id = new_promotion["id"]
+        response = self.client.put(f"{BASE_URL}/{promotion_id}/activate")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        activated_promotion = response.get_json()
+        self.assertEqual(activated_promotion["status"], True)
+
+    def test_deactivate_promotion(self):
+        """It should Deactivate an existing Promotion"""
+        test_promotion = PromotionFactory()
+        response = self.client.post(BASE_URL, json=test_promotion.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        # Deactivate the promotion
+        new_promotion = response.get_json()
+        logging.debug(new_promotion)
+        new_promotion["status"] = True
+        promotion_id = new_promotion["id"]
+        response = self.client.put(f"{BASE_URL}/{promotion_id}/deactivate")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        deactivated_promotion = response.get_json()
+        self.assertEqual(deactivated_promotion["status"], False)
+
+    def test_activate_promotion_not_found(self):
+        """It should not Activate a Promotion thats not found"""
+        response = self.client.put(f"{BASE_URL}/0/activate")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        data = response.get_json()
+        logging.debug("Response data = %s", data)
+        self.assertIn("was not found", data["message"])
+
+    def test_deactivate_promotion_not_found(self):
+        """It should not Deactivate a Promotion thats not found"""
+        response = self.client.put(f"{BASE_URL}/0/deactivate")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        data = response.get_json()
+        logging.debug("Response data = %s", data)
+        self.assertIn("was not found", data["message"])
+
+    def test_update_promotion_not_found(self):
+        """It should not update a Promotion thats not found"""
+        test_promotion = PromotionFactory()
+        response = self.client.post(
+            BASE_URL, json=test_promotion.serialize(), content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # update the non-existing Wishlist
+        non_existing_promotion = response.get_json()
+        non_existing_promotion["name"] = "Trial Promotion"
+        new_promotion_id = non_existing_promotion["id"] + 1
+        resp = self.client.put(
+            f"{BASE_URL}/{new_promotion_id}", json=non_existing_promotion
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
 
 ######################################################################

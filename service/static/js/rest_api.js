@@ -5,7 +5,8 @@ $(function () {
     // ****************************************
 
     // Updates the form with data from the response
-    function update_form_data(res) {
+    function update_form_data(res) 
+    {
         $("#promotion_id").val(res.id);
         $("#promotion_name").val(res.name);
         $("#promotion_type").val(res.promotion_type);
@@ -13,8 +14,11 @@ $(function () {
         $("#promotion_start_date").val(res.start_date);
         $("#promotion_duration").val(res.duration);
         $("#promotion_rule").val(res.rule);
-
-
+        if (res.status === true) {
+            $("#status").val("true");
+        } else if (res.status === false) {
+            $("#status").val("false");
+        } 
     }
 
     /// Clears all form fields
@@ -26,7 +30,7 @@ $(function () {
         $("#promotion_start_date").val("");
         $("#promotion_duration").val("");
         $("#promotion_rule").val("");
-
+        $("#status").val("");
     }
 
     // Updates the flash message area
@@ -45,10 +49,12 @@ $(function () {
         let id=parseInt($("#promotion_id").val());
         let name = $("#promotion_name").val();
         let type = $("#promotion_type").val();
-        let product_id=parseInt($("#promotion_id").val());
+        let product_id=parseInt($("#product_id").val());
         let start_date = $("#promotion_start_date").val();
         let duration=parseInt($("#promotion_duration").val());
         let rule=$("#promotion_rule").val();
+        let status_string=$("#status").val();
+        let status = status_string === "true";
         let data = {
             "id":id,
             "name": name,
@@ -56,7 +62,8 @@ $(function () {
             "product_id":product_id,
             "start_date":start_date,
             "duration":duration,
-            "rule":rule
+            "rule":rule,
+            "status":status,
         };
 
         $("#flash_message").empty();
@@ -84,21 +91,6 @@ $(function () {
     // ****************************************
 
     $("#update-btn").click(function () {
-
-        // let promotion_id = $("#promotion_id").val();
-        // let name = $("#promotion_name").val();
-        // let category = $("#promotion_category").val();
-        // let available = $("#promotion_available").val() == "true";
-        // let gender = $("#promotion_gender").val();
-        // let birthday = $("#promotion_birthday").val();
-
-        // let data = {
-        //     "name": name,
-        //     "category": category,
-        //     "available": available,
-        //     "gender": gender,
-        //     "birthday": birthday
-        // };
         let id=parseInt($("#promotion_id").val());
         let name = $("#promotion_name").val();
         let type = $("#promotion_type").val();
@@ -106,6 +98,7 @@ $(function () {
         let start_date = $("#promotion_start_date").val();
         let duration=parseInt($("#promotion_duration").val());
         let rule=$("#promotion_rule").val();
+        let status=$("#status").val();
         let data = {
             "id":id,
             "name": name,
@@ -113,7 +106,8 @@ $(function () {
             "product_id":product_id,
             "start_date":start_date,
             "duration":duration,
-            "rule":rule
+            "rule":rule,
+            "status":status
         };
         $("#flash_message").empty();
 
@@ -191,6 +185,61 @@ $(function () {
             flash_message("Server error!")
         });
     });
+    
+    // ****************************************
+    // Activate a Promotion
+    // ****************************************
+
+    $("#activate-btn").click(function () {
+
+        let promotion_id = $("#promotion_id").val();
+
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "PUT",
+            url: `/promotions/${promotion_id}/activate`,
+            contentType: "application/json",
+            data: '',
+        })
+
+        ajax.done(function(res){
+            clear_form_data()
+            flash_message("Promotion has been Activated!")
+        });
+
+        ajax.fail(function(res){
+            flash_message("Server error!")
+        });
+    });
+
+    // ****************************************
+    // Deactivate a Promotion
+    // ****************************************
+
+    $("#deactivate-btn").click(function () {
+
+        let promotion_id = $("#promotion_id").val();
+
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "PUT",
+            url: `/promotions/${promotion_id}/deactivate`,
+            contentType: "application/json",
+            data: '',
+        })
+
+        ajax.done(function(res){
+            clear_form_data()
+            flash_message("Promotion has been Deactivated!")
+        });
+
+        ajax.fail(function(res){
+            flash_message("Server error!")
+        });
+    });
+
 
     // ****************************************
     // Clear the form
@@ -239,18 +288,20 @@ $(function () {
             let table = '<table class="table table-striped" cellpadding="10">'
             table += '<thead><tr>'
             table += '<th class="col-md-1">ID</th>'
-            table += '<th class="col-md-3">Name</th>'
+            table += '<th class="col-md-2">Name</th>'
             table += '<th class="col-md-2">Promotion Type</th>'
             table += '<th class="col-md-1">Product ID</th>'
             table += '<th class="col-md-2">Start Date</th>'
             table += '<th class="col-md-1">Duration</th>'
             table += '<th class="col-md-3">Rule</th>'
+            table += '<th class="col-md-1">Status</th>'
+
 
             table += '</tr></thead><tbody>'
             let firstPromotion = "";
             for(let i = 0; i < res.length; i++) {
                 let promotion = res[i];
-                table +=  `<tr id="row_${i}"><td>${promotion.id}</td><td>${promotion.name}</td><td>${promotion.promotion_type}</td><td>${promotion.product_id}</td><td>${promotion.start_date}</td><td>${promotion.duration}</td><td>${promotion.rule}</td></tr>`;
+                table +=  `<tr id="row_${i}"><td>${promotion.id}</td><td>${promotion.name}</td><td>${promotion.promotion_type}</td><td>${promotion.product_id}</td><td>${promotion.start_date}</td><td>${promotion.duration}</td><td>${promotion.rule}</td><td>${promotion.status}</td></tr>`;
                 if (i == 0) {
                     firstPromotion = promotion;
                 }
@@ -258,10 +309,10 @@ $(function () {
             table += '</tbody></table>';
             $("#search_results").append(table);
 
-            // // copy the first result to the form
-            // if (firstPromotion != "") {
-            //     update_form_data(firstPromotion)
-            // }
+            // copy the first result to the form
+            if (firstPromotion != "") {
+                update_form_data(firstPromotion)
+            }
 
             flash_message("Success")
         });

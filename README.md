@@ -19,6 +19,7 @@ This is the Promotions repository of the back-end of an e-Commerce Website as a 
 | rule      | `<string>`  | Rule describing the promotion|
 | product_id    | `<integer>`  | Describes the product on which the promotion is applied|
 | promotion_type    | `<enum>`  | Describes the type of promotion-AMOUNT_DISCOUNT,PERCENTAGE_DISCOUNT or BXGY|
+ status   | `<boolean>`  | Describes if promotion is activated or not|
 
 ## RESTful API Endpoints
 
@@ -28,7 +29,9 @@ This is the Promotions repository of the back-end of an e-Commerce Website as a 
 | `GET`       | `/promotions/<int:promotion_id>` | Reads the promotion with id `promotion_id`  |
 | `DELETE`  | `/promotions/<int:promotion_id>`  | Deletes the promotion with id `promotion_id` |
 | `GET`     | `/promotions`  | Lists all the promotions. We can also query or filter the promotions using promotion_type,start_date and product_id|
-| `PUT`   | `/promotions/<int:promotions_id>`  | Updates the promotion with id `promotion_id`|
+| `PUT`   | `/promotions/<int:promotions_id>`  | Updates existing promotion with id `promotion_id`|
+| `PUT`   | `/promotions/<int:promotions_id>/activate`  | Activates existing promotion with id  `promotion_id`|
+| `PUT`   | `/promotions/<int:promotions_id>/deactivate`  | Deactivates existing promotion with id  `promotion_id`|
 
 
 

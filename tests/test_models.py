@@ -67,6 +67,7 @@ class TestPromotionModel(TestCaseBase):
             promotion_type=PromotionType.PERCENTAGE_DISCOUNT,
             rule="30'%'discount",
             product_id=1,
+            status=True,
         )
         self.assertEqual(str(promotion), "<Promotion Happy_New_Year id=[None]>")
         self.assertTrue(promotion is not None)
@@ -76,6 +77,7 @@ class TestPromotionModel(TestCaseBase):
         self.assertEqual(promotion.promotion_type, PromotionType.PERCENTAGE_DISCOUNT)
         self.assertEqual(promotion.rule, "30'%'discount")
         self.assertEqual(promotion.product_id, 1)
+        self.assertEqual(promotion.status, True)
 
     def test_add_a_promotion(self):
         """It should Create a promotion and add it to the database"""
@@ -88,6 +90,7 @@ class TestPromotionModel(TestCaseBase):
             promotion_type=PromotionType.PERCENTAGE_DISCOUNT,
             rule="30'$'off",
             product_id=1,
+            status=True,
         )
         self.assertTrue(promotion is not None)
         self.assertEqual(promotion.id, None)
@@ -112,6 +115,7 @@ class TestPromotionModel(TestCaseBase):
         self.assertEqual(found_promotion.duration, promotion.duration)
         self.assertEqual(found_promotion.rule, promotion.rule)
         self.assertEqual(found_promotion.product_id, promotion.product_id)
+        self.assertEqual(found_promotion.status, promotion.status)
 
     def test_update_a_promotion(self):
         """It should Update a Promotion"""
@@ -140,6 +144,24 @@ class TestPromotionModel(TestCaseBase):
         logging.debug(promotion)
         promotion.id = None
         self.assertRaises(DataValidationError, promotion.update)
+
+    def test_activate_a_promotion(self):
+        """It should Activate a Promotion"""
+        promotion = PromotionFactory()
+        promotion.status = False
+        promotion.create()
+        promotion.activate()
+        activated_promotion = Promotion.find(promotion.id)
+        self.assertEqual(activated_promotion.status, True)
+
+    def test_deactivate_a_promotion(self):
+        """It should Deactivate a Promotion"""
+        promotion = PromotionFactory()
+        promotion.status = True
+        promotion.create()
+        promotion.deactivate()
+        activated_promotion = Promotion.find(promotion.id)
+        self.assertEqual(activated_promotion.status, False)
 
     def test_delete_a_promotion(self):
         """It should Delete a Promotion"""
@@ -181,6 +203,8 @@ class TestPromotionModel(TestCaseBase):
         self.assertEqual(data["rule"], promotion.rule)
         self.assertIn("product_id", data)
         self.assertEqual(data["product_id"], promotion.product_id)
+        self.assertIn("status", data)
+        self.assertEqual(data["status"], promotion.status)
 
     def test_deserialize_a_promotion(self):
         """It should de-serialize a Promotion"""
@@ -195,6 +219,7 @@ class TestPromotionModel(TestCaseBase):
         self.assertEqual(promotion.rule, data["rule"])
         self.assertEqual(promotion.duration, data["duration"])
         self.assertEqual(promotion.product_id, data["product_id"])
+        self.assertEqual(promotion.status, data["status"])
 
     def test_deserialize_missing_data(self):
         """It should not deserialize a Promotion with missing data"""
@@ -285,6 +310,7 @@ class TestModelQueries(TestCaseBase):
         self.assertEqual(promotion.promotion_type, promotions[1].promotion_type)
         self.assertEqual(promotion.rule, promotions[1].rule)
         self.assertEqual(promotion.product_id, promotions[1].product_id)
+        self.assertEqual(promotion.status, promotions[1].status)
 
     def test_find_by_name(self):
         """It should Find a Promotion by Name"""
