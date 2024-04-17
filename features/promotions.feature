@@ -5,8 +5,8 @@ Feature: The promotions service back-end
 
 Background:
     Given the following promotions
-        | id  | name         | start_date | duration | promotion_type   | rule   | product_id | status
-        | 1   | Promotion-1  | 2024-04-17 |      5    | AMOUNT_DISCOUNT | 5$ off |   990      |  True
+        | id  | name         | start_date | duration | promotion_type   | rule   | product_id | status |
+        | 1   | Promotion-1  | 2024-04-17 |      5    | AMOUNT_DISCOUNT | 5$ off |   990      |  True   |
         
 Scenario: The server is running
     When I visit the "Home Page"
