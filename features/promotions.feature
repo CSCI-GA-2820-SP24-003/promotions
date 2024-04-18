@@ -6,8 +6,8 @@ Feature: The promotions service back-end
 Background:
     Given the following promotions
         | name           | start_date | duration  | promotion_type   | rule   | product_id | status |
-        | April Sale     | 2024-04-17 |      5    | AMOUNT_DISCOUNT  | 5$ off |   990      |  True  |
-        | Happy New Year | 2023-12-25 |      15   | BXGY             | B1G1   |   1234     |  False |
+        | April Sale     | 2024-04-17 |      5    | AMOUNT_DISCOUNT  | 5$ off |   990      |  true  |
+        | Happy New Year | 2023-12-25 |      15   | BXGY             | B1G1   |   1234     |  false |
 
 Scenario: The server is running
     When I visit the "Home Page"
@@ -22,26 +22,26 @@ Scenario: Create a Promotion
     And I set the "Start Date" to "12-20-2023"
     And I set the "Duration" to "15"
     And I set the "Rule" to "30% off"
-    And I select "False" in the "Status" dropdown
+    And I select "false" in the "Status" dropdown
     And I press the "Create" button
     Then I should see the message "Success"
-    When I copy the "Promotion ID" field
+    When I copy the "ID" field
     And I press the "Clear" button
-    Then the "Promotion ID" field should be empty
-    And the "Promotion Name" field should be empty
-    And the "Promotion Type" field should be empty
+    Then the "ID" field should be empty
+    And the "Name" field should be empty
+    And the "Type" field should be empty
     And the "Product ID" field should be empty
     And the "Start Date" field should be empty
-     And the "Promotion Duration" field should be empty
-    And the "Promotion Rule" field should be empty
+     And the "Duration" field should be empty
+    And the "Rule" field should be empty
     And the "Status" field should be empty
-    When I paste the "Promotion ID" field
+    When I paste the "ID" field
     And I press the "Retrieve" button
     Then I should see the message "Success"
-    And I should see "Merry Christmas" in the "Promotion Name" field
-    And I should see "Percentage Discount" in the "Promotion Type" field
-    And I should see "350" in the "Product ID" dropdown
-    And I should see "12-20-2023" in the "Start Date" dropdown
-    And I should see "15" in the "Promotion Duration" field
-    And I should see "30% off" in the "Promotion Rule" field
-    And I should see "False" in the "Status" field
+    And I should see "Merry Christmas" in the "Name" field
+    And I should see "Percentage Discount" in the "Type" dropdown
+    And I should see "350" in the "Product ID" field
+    And I should see "2023-12-20" in the "Start Date" field
+    And I should see "15" in the "Duration" field
+    And I should see "30% off" in the "Rule" field
+    And I should see "false" in the "Status" dropdown
