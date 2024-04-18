@@ -16,12 +16,12 @@ Scenario: The server is running
 
 Scenario: Create a Promotion
     When I visit the "Home Page"
-    And I set the "Promotion Name" to "Merry Christmas"
-    And I select "Percentage Discount" in the "Promotion Type" dropdown
+    And I set the "Name" to "Merry Christmas"
+    And I select "Percentage Discount" in the "Type" dropdown
     And I set the "Product ID" to "350"
     And I set the "Start Date" to "12-20-2023"
-    And I set the "Promotion Duration" to "15"
-    And I set the "Promotion Rule" to "30% off"
+    And I set the "Duration" to "15"
+    And I set the "Rule" to "30% off"
     And I select "False" in the "Status" dropdown
     And I press the "Create" button
     Then I should see the message "Success"
