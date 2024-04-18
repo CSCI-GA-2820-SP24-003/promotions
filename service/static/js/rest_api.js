@@ -10,14 +10,14 @@ $(function () {
         $("#promotion_id").val(res.id);
         $("#promotion_name").val(res.name);
         $("#promotion_type").val(res.promotion_type);
-        $("#product_id").val(res.product_id);
+        $("#promotion_product_id").val(res.product_id);
         $("#promotion_start_date").val(res.start_date);
         $("#promotion_duration").val(res.duration);
         $("#promotion_rule").val(res.rule);
         if (res.status === true) {
-            $("#status").val("true");
+            $("#promotion_status").val("true");
         } else if (res.status === false) {
-            $("#status").val("false");
+            $("#promotion_status").val("false");
         } 
     }
 
@@ -26,11 +26,11 @@ $(function () {
         $("#promotion_id").val("");
         $("#promotion_name").val("");
         $("#promotion_type").val("");
-        $("#product_id").val("");
+        $("#promotion_product_id").val("");
         $("#promotion_start_date").val("");
         $("#promotion_duration").val("");
         $("#promotion_rule").val("");
-        $("#status").val("");
+        $("#promotion_status").val("");
     }
 
     // Updates the flash message area
@@ -49,11 +49,11 @@ $(function () {
         let id=parseInt($("#promotion_id").val());
         let name = $("#promotion_name").val();
         let type = $("#promotion_type").val();
-        let product_id=parseInt($("#product_id").val());
+        let product_id=parseInt($("#promotion_product_id").val());
         let start_date = $("#promotion_start_date").val();
         let duration=parseInt($("#promotion_duration").val());
         let rule=$("#promotion_rule").val();
-        let status_string=$("#status").val();
+        let status_string=$("#promotion_status").val();
         let status = status_string === "true";
         let data = {
             "id":id,
@@ -94,11 +94,11 @@ $(function () {
         let id=parseInt($("#promotion_id").val());
         let name = $("#promotion_name").val();
         let type = $("#promotion_type").val();
-        let product_id=parseInt($("#promotion_id").val());
+        let product_id=parseInt($("#promotion_product_id").val());
         let start_date = $("#promotion_start_date").val();
         let duration=parseInt($("#promotion_duration").val());
         let rule=$("#promotion_rule").val();
-        let status=$("#status").val();
+        let status=$("#promotion_status").val();
         let data = {
             "id":id,
             "name": name,
