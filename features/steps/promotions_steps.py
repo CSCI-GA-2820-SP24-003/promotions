@@ -48,10 +48,10 @@ def step_impl(context):
         payload = {
             "name": row["name"],
             "start_date": row["start_date"],
-            "duration": row["duration"],
+            "duration": int(row["duration"]),
             "promotion_type": row["promotion_type"],
             "rule": row["rule"],
-            "product_id": row["product_id"],
+            "product_id": int(row["product_id"]),
             "status": row["status"] in ["True", "true", "1"],
         }
         context.resp = requests.post(rest_endpoint, json=payload)
