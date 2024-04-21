@@ -259,13 +259,22 @@ $(function () {
     $("#search-btn").click(function () {
         let name = $("#promotion_name").val();
         let ptype = $("#promotion_type").val();
-        let status = $("#promotion_status").val() == "true";
         let product_id = $("#promotion_product_id").val();
+        let start_date = $("#promotion_start_date").val();
+        let status = $("#promotion_status").val() == "true";
+        
 
         let queryString = ""
 
         if (name) {
             queryString += 'name=' + name
+        }
+        if (ptype) {
+            if (queryString.length > 0) {
+                queryString += '&promotion_type=' + ptype
+            } else {
+                queryString += 'promotion_type=' + ptype
+            }
         }
         if (product_id) {
             if (queryString.length > 0) {
@@ -274,11 +283,11 @@ $(function () {
                 queryString += 'product_id=' + product_id
             }
         }
-        if (ptype) {
+        if (start_date) {
             if (queryString.length > 0) {
-                queryString += '&promotion_type=' + ptype
+                queryString += '&start_date=' + start_date
             } else {
-                queryString += 'promotion_type=' + ptype
+                queryString += 'start_date=' + start_date
             }
         }
         if (status) {
