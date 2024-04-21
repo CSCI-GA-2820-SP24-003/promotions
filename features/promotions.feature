@@ -57,14 +57,15 @@ Scenario: List all promotions
     And I should see "Weekend Sale" in the results
     And I should not see "Merry Christmas" in the results
 
-Scenario: Search for dogs
+Scenario: Search for promotions of type percentage disount
     When I visit the "Home Page"
-    And I set the "Category" to "dog"
+    And I set the "Type" to "Percentage Disount"
     And I press the "Search" button
     Then I should see the message "Success"
-    And I should see "fido" in the results
-    And I should not see "kitty" in the results
-    And I should not see "leo" in the results
+    And I should see "Weekend Sale" in the results
+    And I should see "March Sale" in the results
+    And I should not see "April Sale" in the results
+    And I should not see "Happy New Year" in the results
 
 Scenario: Update a promotion
     When I visit the "Home Page"
