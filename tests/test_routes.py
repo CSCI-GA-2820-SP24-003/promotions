@@ -279,19 +279,19 @@ class TestPromotionService(TestCase):
     def test_query_by_promotion_type(self):
         """It should Query Promotions by promotion_type"""
         promotions = self._create_promotions(10)
-        BXGY_promotions = [
+        bxgy_promotions = [
             promotion
             for promotion in promotions
             if promotion.promotion_type == PromotionType.BXGY
         ]
-        BXGY_count = len(BXGY_promotions)
-        logging.debug("Female Promotions [%d] %s", BXGY_count, BXGY_promotions)
+        bxgy_count = len(bxgy_promotions)
+        logging.debug("Female Promotions [%d] %s", bxgy_count, bxgy_promotions)
 
         # test for activated
         response = self.client.get(BASE_URL, query_string="promotion_type=BXGY")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
-        self.assertEqual(len(data), BXGY_count)
+        self.assertEqual(len(data), bxgy_count)
         # check the data just to be sure
         for promotion in data:
             self.assertEqual(promotion["promotion_type"], PromotionType.BXGY.name)
