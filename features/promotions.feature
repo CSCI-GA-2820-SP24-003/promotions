@@ -5,10 +5,11 @@ Feature: The promotions service back-end
 
 Background:
     Given the following promotions
-        | name           | start_date | duration  | promotion_type     | rule   | product_id | status |
-        | April Sale     | 2024-04-17 |      5    | AMOUNT_DISCOUNT    | 5$ off |   990      |  true  |
-        | Happy New Year | 2023-12-25 |      15   | BXGY               | B1G1   |   1234     |  false |
-        | Weekend Sale   | 2024-02-20 |      2    | PERCENTAGE_DISCOUNT| 10% off|   5678     |  false |
+        | name           | start_date | duration  | promotion_type      | rule   | product_id | status |
+        | April Sale     | 2024-04-17 |      5    | AMOUNT_DISCOUNT     | 5$ off |   990      |  true  |
+        | Happy New Year | 2023-12-25 |      15   | BXGY                | B1G1   |   1234     |  false |
+        | Weekend Sale   | 2024-02-20 |      2    | PERCENTAGE_DISCOUNT | 10% off|   5678     |  false |
+        | March Sale     | 2024-03-01 |      30   | PERCENTAGE_DISCOUNT | 5% off |   990      |  true  |
 
 Scenario: The server is running
     When I visit the "Home Page"
@@ -55,6 +56,15 @@ Scenario: List all promotions
     And I should see "Happy New Year" in the results
     And I should see "Weekend Sale" in the results
     And I should not see "Merry Christmas" in the results
+
+Scenario: Search for dogs
+    When I visit the "Home Page"
+    And I set the "Category" to "dog"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "fido" in the results
+    And I should not see "kitty" in the results
+    And I should not see "leo" in the results
 
 Scenario: Update a promotion
     When I visit the "Home Page"
