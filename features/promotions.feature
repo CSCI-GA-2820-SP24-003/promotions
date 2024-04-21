@@ -55,3 +55,22 @@ Scenario: List all promotions
     And I should see "Happy New Year" in the results
     And I should see "Weekend Sale" in the results
     And I should not see "Merry Christmas" in the results
+
+Scenario: Update a promotion
+    When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    When I change "Rule" to "10$ off" 
+    And I press the "Update" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should see the message "Success"
+    And I should see "10$ off" in the "Rule" field
+    When I press the "Clear" button
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "10$ off" in the results
+    And I should not see "5$ off" in the results

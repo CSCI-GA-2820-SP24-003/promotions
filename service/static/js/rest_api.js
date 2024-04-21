@@ -98,7 +98,8 @@ $(function () {
         let start_date = $("#promotion_start_date").val();
         let duration=parseInt($("#promotion_duration").val());
         let rule=$("#promotion_rule").val();
-        let status=$("#promotion_status").val();
+        let status_string=$("#promotion_status").val();
+        let status = status_string === "true";
         let data = {
             "id":id,
             "name": name,
