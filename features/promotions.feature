@@ -57,9 +57,9 @@ Scenario: List all promotions
     And I should see "Weekend Sale" in the results
     And I should not see "Merry Christmas" in the results
 
-Scenario: Search for promotions of type percentage disount
+Scenario: Search for promotions of type percentage discount
     When I visit the "Home Page"
-    And I set the "Type" to "Percentage Disount"
+    And I select "Percentage Discount" in the "Type" dropdown
     And I press the "Search" button
     Then I should see the message "Success"
     And I should see "Weekend Sale" in the results
@@ -69,6 +69,7 @@ Scenario: Search for promotions of type percentage disount
 
 Scenario: Update a promotion
     When I visit the "Home Page"
+    And I set the "Name" to "April Sale"
     And I press the "Search" button
     Then I should see the message "Success"
     When I change "Rule" to "10$ off" 
