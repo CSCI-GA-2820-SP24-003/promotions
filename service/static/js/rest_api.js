@@ -257,21 +257,28 @@ $(function () {
     // ****************************************
 
     $("#search-btn").click(function () {
+        let name = $("#promotion_name").val();
+        let ptype = $("#promotion_type").val();
+        let status = $("#promotion_status").val() == "true";
 
-        let product_id=$("#product_id").val()
-        let start_date=$("#start_date").val()
-        let promotion_type=$("#promotion_type").val()
         let queryString = ""
 
-        if (product_id) {
-            queryString += 'product_id=' + product_id
+        if (name) {
+            queryString += 'name=' + name
         }
-        if (start_date) {
-            queryString += 'start_date=' + start_date
+        if (ptype) {
+            if (queryString.length > 0) {
+                queryString += '&promotion_type=' + ptype
+            } else {
+                queryString += 'promotion_type=' + ptype
+            }
         }
-        if (promotion_type) {
-            queryString += 'promotion_type=' + promotion_type
-
+        if (status) {
+            if (queryString.length > 0) {
+                queryString += '&status=' + status
+            } else {
+                queryString += 'status=' + status
+            }
         }
 
         $("#flash_message").empty();

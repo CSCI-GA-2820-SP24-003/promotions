@@ -341,3 +341,17 @@ class TestModelQueries(TestCaseBase):
         self.assertEqual(found.count(), count)
         for promotion in found:
             self.assertEqual(promotion.promotion_type, promotion_type)
+
+    def test_find_by_promotion_status(self):
+        """It should Find Promotions by promotion status"""
+        promotions = PromotionFactory.create_batch(10)
+        for promotion in promotions:
+            promotion.create()
+        activated = promotions[0].status
+        count = len(
+            [promotion for promotion in promotions if promotion.status == activated]
+        )
+        found = Promotion.find_by_promotion_status(activated)
+        self.assertEqual(found.count(), count)
+        for promotion in found:
+            self.assertEqual(promotion.status, activated)

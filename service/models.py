@@ -185,43 +185,51 @@ class Promotion(db.Model):
         logger.info("Processing name query for %s ...", name)
         return cls.query.filter(cls.name == name)
 
-    # @classmethod
-    # def delete_by_id(cls, by_id):
-    #     """Delete a Promotion by its ID"""
-    #     logger.info("Processing delete with id %s ...", by_id)
-    #     cls.query.filter(cls.id == by_id).delete()
+    @classmethod
+    def find_by_promotion_status(cls, promotion_status: bool = True) -> list:
+        """Returns all Promotions by their status
+
+        :param available: True for promotions that are activated
+        :type available: str
+
+        :return: a collection of Promotions that are activated
+        :rtype: list
+
+        """
+        logger.info("Processing promotion status query for %s ...", promotion_status)
+        return cls.query.filter(cls.status == promotion_status)
 
     @classmethod
     def find_by_promotion_type(
         cls, promotion_type: PromotionType = PromotionType.UNKNOWN
     ) -> list:
-        """Returns all Pets by their PromotionType
+        """Returns all Promotions by their PromotionType
 
         :param promotion_type: values are ['AMOUNT_DISCOUNT', 'PERCENTAGE_DISCOUNT', 'BXGY', 'UNKNOWN']
         :type available: enum
 
-        :return: a collection of Pets that are available
+        :return: a collection of Promotions that are available
         :rtype: list
 
         """
         logger.info("Processing promotion_type query for %s ...", promotion_type.name)
         return cls.query.filter(cls.promotion_type == promotion_type)
 
-    @classmethod
-    def find_by_filters(cls, product_id, start_date, promotion_type):
-        """Returns promotions by product id, start date, and type"""
-        logger.info(
-            "Processing product id query for product %s start date %s type... %s",
-            product_id,
-            start_date,
-            promotion_type,
-        )
-        res = cls.query
-        if product_id:
-            res = res.filter(cls.product_id == product_id)
-        if start_date:
-            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-            res = res.filter(cls.start_date == start_date)
-        if promotion_type:
-            res = res.filter(cls.promotion_type == PromotionType[promotion_type])
-        return res
+    # @classmethod
+    # def find_by_filters(cls, product_id, start_date, promotion_type):
+    #     """Returns promotions by product id, start date, and type"""
+    #     logger.info(
+    #         "Processing product id query for product %s start date %s type... %s",
+    #         product_id,
+    #         start_date,
+    #         promotion_type,
+    #     )
+    #     res = cls.query
+    #     if product_id:
+    #         res = res.filter(cls.product_id == product_id)
+    #     if start_date:
+    #         start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+    #         res = res.filter(cls.start_date == start_date)
+    #     if promotion_type:
+    #         res = res.filter(cls.promotion_type == PromotionType[promotion_type])
+    #     return res
