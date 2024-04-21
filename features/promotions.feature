@@ -55,6 +55,7 @@ Scenario: List all promotions
     And I should see "April Sale" in the results
     And I should see "Happy New Year" in the results
     And I should see "Weekend Sale" in the results
+    And I should see "March Sale" in the results
     And I should not see "Merry Christmas" in the results
 
 Scenario: Search for promotions of type percentage discount
@@ -66,6 +67,44 @@ Scenario: Search for promotions of type percentage discount
     And I should see "March Sale" in the results
     And I should not see "April Sale" in the results
     And I should not see "Happy New Year" in the results
+
+Scenario: Search for promotions by product ID
+    When I visit the "Home Page"
+    And I set the "Product ID" to "990"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "March Sale" in the results
+    And I should see "April Sale" in the results
+    And I should not see "Weekend Sale" in the results
+    And I should not see "Happy New Year" in the results
+
+Scenario: Search for promotions by start date
+    When I visit the "Home Page"
+    And I set the "Start Date" to "02-20-2024"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Weekend Sale" in the results
+    And I should not see "April Sale" in the results
+    And I should not see "March Sale" in the results
+    And I should not see "Happy New Year" in the results
+
+Scenario: Search for promotions by status
+    When I visit the "Home Page"
+    And I select "true" in the "Status" dropdown
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "March Sale" in the results
+    And I should see "April Sale" in the results
+    And I should not see "Weekend Sale" in the results
+    And I should not see "Happy New Year" in the results
+    When I press the "Clear" button
+    And I select "false" in the "Status" dropdown
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should not see "March Sale" in the results
+    And I should not see "April Sale" in the results
+    And I should see "Weekend Sale" in the results
+    And I should see "Happy New Year" in the results
 
 Scenario: Update a promotion
     When I visit the "Home Page"
