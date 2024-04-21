@@ -260,11 +260,19 @@ $(function () {
         let name = $("#promotion_name").val();
         let ptype = $("#promotion_type").val();
         let status = $("#promotion_status").val() == "true";
+        let product_id = $("#promotion_product_id").val();
 
         let queryString = ""
 
         if (name) {
             queryString += 'name=' + name
+        }
+        if (product_id) {
+            if (queryString.length > 0) {
+                queryString += '&product_id=' + product_id
+            } else {
+                queryString += 'product_id=' + product_id
+            }
         }
         if (ptype) {
             if (queryString.length > 0) {

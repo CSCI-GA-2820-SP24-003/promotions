@@ -192,24 +192,30 @@ def list_promotions():
 
     # Parse any arguments from the query string
     name = request.args.get("name")
-    # product_id = request.args.get("product_id", type=int)
-    # start_date = request.args.get("start_date")
+    product_id = request.args.get("product_id", type=int)
     promotion_type = request.args.get("promotion_type")
+    start_date = request.args.get("start_date")
     promotion_status = request.args.get("status")
 
     if name:
         app.logger.info("Find by name: %s", name)
         promotions = Promotion.find_by_name(name)
-    elif promotion_status:
-        app.logger.info("Find by promotion status: %s", promotion_status)
-        # create bool from string
-        promotion_status_value = promotion_status.lower() in ["true", "yes", "1"]
-        promotions = Promotion.find_by_promotion_status(promotion_status_value)
     elif promotion_type:
         app.logger.info("Find by promotion type: %s", promotion_type)
         # create enum from string
         promotion_type_value = getattr(PromotionType, promotion_type.upper())
         promotions = Promotion.find_by_promotion_type(promotion_type_value)
+    elif product_id:
+        app.logger.info("Find by product id: %d", product_id)
+        promotions = Promotion.find_by_product_id(product_id)
+    elif start_date:
+        app.logger.info("Find by promotion type: %s", start_date)
+        promotions = Promotion.find_by_start_date(start_date)
+    elif promotion_status:
+        app.logger.info("Find by promotion status: %s", promotion_status)
+        # create bool from string
+        promotion_status_value = promotion_status.lower() in ["true", "yes", "1"]
+        promotions = Promotion.find_by_promotion_status(promotion_status_value)
     else:
         app.logger.info("Find all")
         promotions = Promotion.all()
@@ -217,14 +223,6 @@ def list_promotions():
     results = [promotion.serialize() for promotion in promotions]
     app.logger.info("[%s] Promotions returned", len(results))
     return jsonify(results), status.HTTP_200_OK
-
-    # if product_id or start_date or promotion_type:
-    #     promotions = Promotion.find_by_filters(product_id, start_date, promotion_type)
-    # else:
-    #     promotions = Promotion.all()
-    # serialized_promotions = [promotion.serialize() for promotion in promotions]
-    # app.logger.info("Promotions Listed")
-    # return jsonify(serialized_promotions), status.HTTP_200_OK
 
 
 ######################################################################

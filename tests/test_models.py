@@ -325,7 +325,7 @@ class TestModelQueries(TestCaseBase):
             self.assertEqual(promotion.name, name)
 
     def test_find_by_promotion_type(self):
-        """It should Find Promotions by Gender"""
+        """It should Find Promotions by Promotion Type"""
         promotions = PromotionFactory.create_batch(10)
         for promotion in promotions:
             promotion.create()
@@ -341,6 +341,42 @@ class TestModelQueries(TestCaseBase):
         self.assertEqual(found.count(), count)
         for promotion in found:
             self.assertEqual(promotion.promotion_type, promotion_type)
+
+    def test_find_by_product_id(self):
+        """It should Find a Promotion by Product ID"""
+        promotions = PromotionFactory.create_batch(10)
+        for promotion in promotions:
+            promotion.create()
+        product_id = promotions[0].product_id
+        count = len(
+            [
+                promotion
+                for promotion in promotions
+                if promotion.product_id == product_id
+            ]
+        )
+        found = Promotion.find_by_product_id(product_id)
+        self.assertEqual(found.count(), count)
+        for promotion in found:
+            self.assertEqual(promotion.product_id, product_id)
+
+    def test_find_by_start_date(self):
+        """It should Find a Promotion by Start Time"""
+        promotions = PromotionFactory.create_batch(10)
+        for promotion in promotions:
+            promotion.create()
+        start_date = promotions[0].start_date
+        count = len(
+            [
+                promotion
+                for promotion in promotions
+                if promotion.start_date == start_date
+            ]
+        )
+        found = Promotion.find_by_start_date(start_date.isoformat())
+        self.assertEqual(found.count(), count)
+        for promotion in found:
+            self.assertEqual(promotion.start_date, start_date)
 
     def test_find_by_promotion_status(self):
         """It should Find Promotions by promotion status"""
