@@ -261,7 +261,7 @@ $(function () {
         let ptype = $("#promotion_type").val();
         let product_id = $("#promotion_product_id").val();
         let start_date = $("#promotion_start_date").val();
-        let status = $("#promotion_status").val() == "true";
+        let status = $("#promotion_status").val();
         
 
         let queryString = ""
@@ -292,7 +292,7 @@ $(function () {
         }
         if (status) {
             if (queryString.length > 0) {
-                queryString += '&status=' + status
+                queryString += '&status=' + status 
             } else {
                 queryString += 'status=' + status
             }
