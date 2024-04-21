@@ -84,3 +84,32 @@ Scenario: Update a promotion
     Then I should see the message "Success"
     And I should see "10$ off" in the results
     And I should not see "5$ off" in the results
+
+Scenario: Dectivate a promotion
+    When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Deactivate" button
+    Then I should see the message "Promotion has been Deactivated!"
+    When I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should see "false" in the "Status" dropdown
+
+Scenario: Activate a promotion
+    When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Deactivate" button
+    Then I should see the message "Promotion has been Deactivated!"
+    When I paste the "Id" field
+    And I press the "Activate" button
+    Then I should see the message "Promotion has been Activated!"
+    When I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should see "true" in the "Status" dropdown
