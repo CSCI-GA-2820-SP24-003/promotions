@@ -159,3 +159,23 @@ Scenario: Activate a promotion
     When I paste the "Id" field
     And I press the "Retrieve" button
     Then I should see "true" in the "Status" dropdown
+
+Scenario: Delete a promotion
+    When I visit the "Home Page"
+    And I set the "Name" to "April Sale"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Delete" button
+    Then I should see the message "Promotion has been Deleted!"
+    When I paste the "Id" field
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Weekend Sale" in the results
+    And I should see "Happy New Year" in the results
+    And I should see "March Sale" in the results
+    And I should not see "April Sale" in the results
+    
+
