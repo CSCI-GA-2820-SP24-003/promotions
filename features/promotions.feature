@@ -34,7 +34,7 @@ Scenario: Create a Promotion
     And the "Type" field should be empty
     And the "Product ID" field should be empty
     And the "Start Date" field should be empty
-     And the "Duration" field should be empty
+    And the "Duration" field should be empty
     And the "Rule" field should be empty
     And the "Status" field should be empty
     When I paste the "ID" field
@@ -165,12 +165,18 @@ Scenario: Delete a promotion
     And I set the "Name" to "April Sale"
     And I press the "Search" button
     Then I should see the message "Success"
+    And I should see "April Sale" in the "Name" field
+    And I should see "2024-04-17" in the "Start Date" field
     When I copy the "Id" field
     And I press the "Clear" button
-    And I paste the "Id" field
+    Then the "Id" field should be empty
+    And the "Name" field should be empty
+    And the "Start Date" field should be empty
+    When I paste the "Id" field
     And I press the "Delete" button
     Then I should see the message "Promotion has been Deleted!"
-    When I paste the "Id" field
+    When I press the "Clear" button 
+    # And I paste the "Id" field
     And I press the "Search" button
     Then I should see the message "Success"
     And I should see "Weekend Sale" in the results
