@@ -6,9 +6,10 @@ import os
 import logging
 from unittest import TestCase
 from datetime import date
+from urllib.parse import quote_plus
 from wsgi import app
 from service.common import status
-from service.models import db, Promotion
+from service.models import db, Promotion, PromotionType
 from .factories import PromotionFactory
 
 DATABASE_URI = os.getenv(
@@ -195,37 +196,6 @@ class TestPromotionService(TestCase):
         logging.debug("Response data = %s", data)
         self.assertIn("was not found", data["message"])
 
-    # I replace this test with the test copied from the sample, since this code can not work after I refine the database
-    # def test_update_promotion(self):
-    #     """It should Update an existing Promotion"""
-    #     # Step 1: Create a promotion to update
-    #     test_promotion = self._create_promotions(1)[0]
-
-    #     # Step 2: Define the data for updating the promotion
-    #     update_data = {
-    #         "name": "Updated Promotion Name",
-    #         "start_date": str(
-    #             test_promotion.start_date
-    #         ),  # Keeping the original start_date for completeness
-    #         "duration": test_promotion.duration + 5,  # Updating the duration
-    #         "rule": "Updated Rule",  # Updating the rule
-    #         "product_id": test_promotion.product_id,  # Keeping the original product_id for completeness
-    #     }
-
-    #     # Step 3: Send a PUT request to update the promotion
-    #     response = self.client.put(f"{BASE_URL}/{test_promotion.id}", json=update_data)
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    #     # Step 4: Fetch the updated promotion and verify the updates
-    #     response = self.client.get(f"{BASE_URL}/{test_promotion.id}")
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     updated_promotion = response.get_json()
-
-    #     self.assertEqual(updated_promotion["name"], update_data["name"])
-    #     self.assertEqual(updated_promotion["duration"], update_data["duration"])
-    #     self.assertEqual(updated_promotion["rule"], update_data["rule"])
-    #     self.assertEqual(updated_promotion["product_id"], update_data["product_id"])
-
     def test_update_promotion(self):
         """It should Update an existing Promotion"""
         # create a promotion to update
@@ -244,6 +214,127 @@ class TestPromotionService(TestCase):
         updated_promotion = response.get_json()
         self.assertEqual(updated_promotion["rule"], "unknown")
 
+    # ----------------------------------------------------------
+    # TEST QUERY
+    # ----------------------------------------------------------
+    def test_query_by_name(self):
+        """It should Query Promotions by name"""
+        promotions = self._create_promotions(5)
+        test_name = promotions[0].name
+        name_count = len(
+            [promotion for promotion in promotions if promotion.name == test_name]
+        )
+        response = self.client.get(
+            BASE_URL, query_string=f"name={quote_plus(test_name)}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), name_count)
+        # check the data just to be sure
+        for promotion in data:
+            self.assertEqual(promotion["name"], test_name)
+
+    def test_query_by_product_id(self):
+        """It should Query Promotions by product_id"""
+        promotions = self._create_promotions(5)
+        test_product_id = promotions[0].product_id
+        product_id_count = len(
+            [
+                promotion
+                for promotion in promotions
+                if promotion.product_id == test_product_id
+            ]
+        )
+        response = self.client.get(
+            BASE_URL, query_string=f"product_id={test_product_id}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), product_id_count)
+        # check the data just to be sure
+        for promotion in data:
+            self.assertEqual(promotion["product_id"], test_product_id)
+
+    def test_query_by_start_date(self):
+        """It should Query Promotions by start_date"""
+        promotions = self._create_promotions(5)
+        test_start_date = promotions[0].start_date
+        start_date_count = len(
+            [
+                promotion
+                for promotion in promotions
+                if promotion.start_date == test_start_date
+            ]
+        )
+        response = self.client.get(
+            BASE_URL, query_string=f"start_date={test_start_date}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), start_date_count)
+        # check the data just to be sure
+        for promotion in data:
+            self.assertEqual(promotion["start_date"], test_start_date.isoformat())
+
+    def test_query_by_promotion_type(self):
+        """It should Query Promotions by promotion_type"""
+        promotions = self._create_promotions(10)
+        bxgy_promotions = [
+            promotion
+            for promotion in promotions
+            if promotion.promotion_type == PromotionType.BXGY
+        ]
+        bxgy_count = len(bxgy_promotions)
+        logging.debug("Female Promotions [%d] %s", bxgy_count, bxgy_promotions)
+
+        # test for activated
+        response = self.client.get(BASE_URL, query_string="promotion_type=BXGY")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), bxgy_count)
+        # check the data just to be sure
+        for promotion in data:
+            self.assertEqual(promotion["promotion_type"], PromotionType.BXGY.name)
+
+    def test_query_by_promotion_status(self):
+        """It should Query Promotions by promotion status"""
+        promotions = self._create_promotions(10)
+        activated_promotions = [
+            promotion for promotion in promotions if promotion.status is True
+        ]
+        deactivated_promotions = [
+            promotion for promotion in promotions if promotion.status is False
+        ]
+        activated_count = len(activated_promotions)
+        deactivated_count = len(deactivated_promotions)
+        logging.debug(
+            "Activated Promotions [%d] %s", activated_count, activated_promotions
+        )
+        logging.debug(
+            "Deacticated Promotions [%d] %s", deactivated_count, deactivated_promotions
+        )
+
+        # test for activated
+        response = self.client.get(BASE_URL, query_string="status=true")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), activated_count)
+        # check the data just to be sure
+        for promotion in data:
+            self.assertEqual(promotion["status"], True)
+
+        # test for deactivated
+        response = self.client.get(BASE_URL, query_string="status=false")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), deactivated_count)
+        # check the data just to be sure
+        for promotion in data:
+            self.assertEqual(promotion["status"], False)
+
+    # ----------------------------------------------------------
+    # TEST ACTIONS
+    # ----------------------------------------------------------
     def test_activate_promotion(self):
         """It should Activate an existing Promotion"""
         test_promotion = PromotionFactory()

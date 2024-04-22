@@ -5,10 +5,11 @@ Feature: The promotions service back-end
 
 Background:
     Given the following promotions
-        | name           | start_date | duration  | promotion_type     | rule   | product_id | status |
-        | April Sale     | 2024-04-17 |      5    | AMOUNT_DISCOUNT    | 5$ off |   990      |  true  |
-        | Happy New Year | 2023-12-25 |      15   | BXGY               | B1G1   |   1234     |  false |
-        | Weekend Sale   | 2024-02-20 |      2    | PERCENTAGE_DISCOUNT| 10% off|   5678     |  false |
+        | name           | start_date | duration  | promotion_type      | rule   | product_id | status |
+        | April Sale     | 2024-04-17 |      5    | AMOUNT_DISCOUNT     | 5$ off |   990      |  true  |
+        | Happy New Year | 2023-12-25 |      15   | BXGY                | B1G1   |   1234     |  false |
+        | Weekend Sale   | 2024-02-20 |      2    | PERCENTAGE_DISCOUNT | 10% off|   5678     |  false |
+        | March Sale     | 2024-03-01 |      30   | PERCENTAGE_DISCOUNT | 5% off |   990      |  false |
 
 Scenario: The server is running
     When I visit the "Home Page"
@@ -54,12 +55,65 @@ Scenario: List all promotions
     And I should see "April Sale" in the results
     And I should see "Happy New Year" in the results
     And I should see "Weekend Sale" in the results
+    And I should see "March Sale" in the results
     And I should not see "Merry Christmas" in the results
+
+Scenario: Search for promotions of type percentage discount
+    When I visit the "Home Page"
+    And I select "Percentage Discount" in the "Type" dropdown
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Weekend Sale" in the results
+    And I should see "March Sale" in the results
+    And I should not see "April Sale" in the results
+    And I should not see "Happy New Year" in the results
+
+Scenario: Search for promotions by product ID
+    When I visit the "Home Page"
+    And I set the "Product ID" to "990"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "March Sale" in the results
+    And I should see "April Sale" in the results
+    And I should not see "Weekend Sale" in the results
+    And I should not see "Happy New Year" in the results
+
+Scenario: Search for promotions by start date
+    When I visit the "Home Page"
+    And I set the "Start Date" to "02-20-2024"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Weekend Sale" in the results
+    And I should not see "April Sale" in the results
+    And I should not see "March Sale" in the results
+    And I should not see "Happy New Year" in the results
+
+Scenario: Search for promotions by status
+    When I visit the "Home Page"
+    And I select "true" in the "Status" dropdown
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should not see "March Sale" in the results
+    And I should see "April Sale" in the results
+    And I should not see "Weekend Sale" in the results
+    And I should not see "Happy New Year" in the results
+    When I press the "Clear" button
+    And I select "false" in the "Status" dropdown
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "March Sale" in the results
+    And I should not see "April Sale" in the results
+    And I should see "Weekend Sale" in the results
+    And I should see "Happy New Year" in the results
 
 Scenario: Update a promotion
     When I visit the "Home Page"
+    And I set the "Name" to "April Sale"
     And I press the "Search" button
     Then I should see the message "Success"
+    And I should see "April Sale" in the "Name" field
+    And I should see "Amount Discount" in the "Type" dropdown
+    And I should see "true" in the "Status" dropdown
     When I change "Rule" to "10$ off" 
     And I press the "Update" button
     Then I should see the message "Success"
@@ -77,6 +131,7 @@ Scenario: Update a promotion
 
 Scenario: Dectivate a promotion
     When I visit the "Home Page"
+    And I set the "Name" to "April Sale"
     And I press the "Search" button
     Then I should see the message "Success"
     When I copy the "Id" field
@@ -90,6 +145,7 @@ Scenario: Dectivate a promotion
 
 Scenario: Activate a promotion
     When I visit the "Home Page"
+    And I set the "Name" to "April Sale"
     And I press the "Search" button
     Then I should see the message "Success"
     When I copy the "Id" field
