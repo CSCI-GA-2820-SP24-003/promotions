@@ -149,6 +149,22 @@ $(function () {
 
         ajax.done(function(res){
             //alert(res.toSource())
+            $("#search_results").empty();
+            let table = '<table class="table table-striped" cellpadding="10">'
+            table += '<thead><tr>'
+            table += '<th class="col-md-1">ID</th>'
+            table += '<th class="col-md-2">Name</th>'
+            table += '<th class="col-md-2">Promotion Type</th>'
+            table += '<th class="col-md-1">Product ID</th>'
+            table += '<th class="col-md-2">Start Date</th>'
+            table += '<th class="col-md-1">Duration</th>'
+            table += '<th class="col-md-3">Rule</th>'
+            table += '<th class="col-md-1">Status</th>'
+            table += '</tr></thead><tbody>'
+            let promotion = res;
+            table +=  `<tr id="row_${0}"><td>${promotion.id}</td><td>${promotion.name}</td><td>${promotion.promotion_type}</td><td>${promotion.product_id}</td><td>${promotion.start_date}</td><td>${promotion.duration}</td><td>${promotion.rule}</td><td>${promotion.status}</td></tr>`;
+            table += '</tbody></table>';
+            $("#search_results").append(table);
             update_form_data(res)
             flash_message("Success")
         });
