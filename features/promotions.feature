@@ -195,4 +195,7 @@ Scenario: Retrieve a promotion
     And I paste the "Id" field
     And I press the "Retrieve" button
     Then I should see the message "Sucess"    
-    And I should not see "April Sale" in the results
+    And I should see "April Sale" in the results
+    And I should not see "Weekend Sale" in the results
+    And I should not see "Happy New Year" in the results
+    And I should not see "March Sale" in the results
