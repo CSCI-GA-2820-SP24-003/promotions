@@ -48,6 +48,35 @@ Scenario: Create a Promotion
     And I should see "30% off" in the "Rule" field
     And I should see "false" in the "Status" dropdown
 
+
+Scenario: Read a promotion
+    When I visit the "Home Page"
+    And I set the "Name" to "March Sale"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "March Sale" in the "Name" field
+    And I should see "2024-03-01" in the "Start Date" field
+    When I copy the "ID" field
+    And I press the "Clear" button
+    Then the "ID" field should be empty
+    And the "Name" field should be empty
+    And the "Type" field should be empty
+    And the "Product ID" field should be empty
+    And the "Start Date" field should be empty
+    And the "Duration" field should be empty
+    And the "Rule" field should be empty
+    And the "Status" field should be empty
+    When I paste the "ID" field
+    And I press the "Retrieve" button
+    Then I should see the message "Success"
+    And I should see "March Sale" in the "Name" field
+    And I should see "Percentage Discount" in the "Type" dropdown
+    And I should see "990" in the "Product ID" field
+    And I should see "2024-03-01" in the "Start Date" field
+    And I should see "30" in the "Duration" field
+    And I should see "5% off" in the "Rule" field
+    And I should see "false" in the "Status" dropdown
+
 Scenario: List all promotions
     When I visit the "Home Page"
     And I press the "Search" button
@@ -183,5 +212,4 @@ Scenario: Delete a promotion
     And I should see "Happy New Year" in the results
     And I should see "March Sale" in the results
     And I should not see "April Sale" in the results
-    
 
