@@ -398,7 +398,7 @@ class TestPromotionService(TestCase):
         # update the non-existing Wishlist
         non_existing_promotion = response.get_json()
         non_existing_promotion["name"] = "Trial Promotion"
-        new_promotion_id = non_existing_promotion["id"] + 1
+        new_promotion_id = 0  # non_existing_promotion["id"] + 1
         resp = self.client.put(
             f"{BASE_URL}/{new_promotion_id}", json=non_existing_promotion
         )
