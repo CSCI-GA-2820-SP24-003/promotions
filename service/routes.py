@@ -29,7 +29,7 @@ DELETE /promotions/{id} - deletes a Promotion record in the database
 
 import secrets
 from functools import wraps
-from flask import request
+from flask import jsonify, request
 from flask import current_app as app  # Import Flask application
 from flask_restx import Resource, fields, reqparse, inputs
 from service.models import Promotion, PromotionType
@@ -44,6 +44,15 @@ from . import api
 def index():
     """Index page"""
     return app.send_static_file("index.html")
+
+
+######################################################################
+# GET HEALTH CHECK
+######################################################################
+@app.route("/health")
+def health_check():
+    """Let them know our heart is still beating"""
+    return jsonify(status=200, message="Healthy"), status.HTTP_200_OK
 
 
 # Define the model so that the docs reflect what can be sent
@@ -117,27 +126,6 @@ promotion_args.add_argument(
     required=False,
     help="List Promotions by status",
 )
-
-
-######################################################################
-# Function to generate a random API key (good for testing)
-######################################################################
-def generate_apikey():
-    """Helper function used when testing API keys"""
-    return secrets.token_hex(16)
-
-
-######################################################################
-# GET HEALTH CHECK
-######################################################################
-@api.route("/health")
-class HealthCheck(Resource):
-
-    @api.doc("health_check")
-    @api.response(404, "Not healthy")
-    def health_check(self):
-        """Let them know our heart is still beating"""
-        return "OK", status.HTTP_200_OK
 
 
 ######################################################################
@@ -250,7 +238,8 @@ class PromotionCollection(Resource):
             promotions = Promotion.find_by_start_date(args["start_date"])
         elif args["promotion_type"]:
             app.logger.info("Filtering by type: %s", args["promotion_type"])
-            promotions = Promotion.find_by_promotion_type(args["promotion_type"])
+            promotion_type = PromotionType[args["promotion_type"].upper()]
+            promotions = Promotion.find_by_promotion_type(promotion_type)
         elif args["product_id"]:
             app.logger.info("Filtering by product ID: %s", args["product_id"])
             promotions = Promotion.find_by_product_id(args["product_id"])
@@ -261,8 +250,8 @@ class PromotionCollection(Resource):
             app.logger.info("Returning unfiltered list.")
             promotions = Promotion.all()
 
-        app.logger.info("[%s] Promotions returned", len(promotions))
         results = [promotion.serialize() for promotion in promotions]
+        app.logger.info("[%s] Promotions returned", len(results))
         return results, status.HTTP_200_OK
 
     # ------------------------------------------------------------------
@@ -374,11 +363,6 @@ def abort(error_code: int, message: str):
     api.abort(error_code, message)
 
 
-def init_db(dbname="promotions"):
-    """Initialize the model"""
-    Promotion.init_db(dbname)
-
-
 # """
 # Promotion Service
 
@@ -390,15 +374,6 @@ def init_db(dbname="promotions"):
 # from flask import current_app as app  # Import Flask application
 # from service.models import Promotion, db, PromotionType
 # from service.common import status  # HTTP Status Codes
-
-
-# ######################################################################
-# # GET HEALTH CHECK
-# ######################################################################
-# @app.route("/health")
-# def health_check():
-#     """Let them know our heart is still beating"""
-#     return jsonify(status=200, message="Healthy"), status.HTTP_200_OK
 
 
 # ######################################################################
