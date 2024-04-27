@@ -68,7 +68,7 @@ class TestPromotionService(TestCase):
                 "Could not create test promotion",
             )
             new_promotion = response.get_json()
-            test_promotion.id = new_promotion["_id"]
+            test_promotion.id = new_promotion["id"]
             promotions.append(test_promotion)
         return promotions
 
@@ -350,7 +350,7 @@ class TestPromotionService(TestCase):
         new_promotion = response.get_json()
         logging.debug(new_promotion)
         new_promotion["status"] = False
-        promotion_id = new_promotion["_id"]
+        promotion_id = new_promotion["id"]
         response = self.client.put(f"{BASE_URL}/{promotion_id}/activate")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         activated_promotion = response.get_json()
@@ -365,7 +365,7 @@ class TestPromotionService(TestCase):
         new_promotion = response.get_json()
         logging.debug(new_promotion)
         new_promotion["status"] = True
-        promotion_id = new_promotion["_id"]
+        promotion_id = new_promotion["id"]
         response = self.client.put(f"{BASE_URL}/{promotion_id}/deactivate")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         deactivated_promotion = response.get_json()
@@ -398,7 +398,7 @@ class TestPromotionService(TestCase):
         # update the non-existing Wishlist
         non_existing_promotion = response.get_json()
         non_existing_promotion["name"] = "Trial Promotion"
-        new_promotion_id = non_existing_promotion["_id"] + 1
+        new_promotion_id = non_existing_promotion["id"] + 1
         resp = self.client.put(
             f"{BASE_URL}/{new_promotion_id}", json=non_existing_promotion
         )
