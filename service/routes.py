@@ -27,9 +27,8 @@ PUT /promotions/{id} - updates a Promotion record in the database
 DELETE /promotions/{id} - deletes a Promotion record in the database
 """
 
-import secrets
-from functools import wraps
-from flask import jsonify, request
+
+from flask import jsonify
 from flask import current_app as app  # Import Flask application
 from flask_restx import Resource, fields, reqparse, inputs
 from service.models import Promotion, PromotionType
