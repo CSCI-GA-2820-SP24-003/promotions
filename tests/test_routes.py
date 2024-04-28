@@ -15,7 +15,13 @@ from .factories import PromotionFactory
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql+psycopg://postgres:postgres@localhost:5432/testdb"
 )
-BASE_URL = "/promotions"
+
+# Disable all but critical errors during normal test run
+# uncomment for debugging failing tests
+logging.disable(logging.CRITICAL)
+# BASE_URL = "/promotions"
+BASE_URL = "/api/promotions"
+CONTENT_TYPE_JSON = "application/json"
 
 
 ######################################################################
@@ -392,7 +398,7 @@ class TestPromotionService(TestCase):
         # update the non-existing Wishlist
         non_existing_promotion = response.get_json()
         non_existing_promotion["name"] = "Trial Promotion"
-        new_promotion_id = non_existing_promotion["id"] + 1
+        new_promotion_id = 0  # non_existing_promotion["id"] + 1
         resp = self.client.put(
             f"{BASE_URL}/{new_promotion_id}", json=non_existing_promotion
         )
