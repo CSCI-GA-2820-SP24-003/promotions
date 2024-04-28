@@ -33,7 +33,7 @@ from flask import current_app as app  # Import Flask application
 from flask_restx import Resource, fields, reqparse, inputs
 from service.models import Promotion, PromotionType
 from service.common import status  # HTTP Status Codes
-from . import api
+from . import api  # pylint: disable=cyclic-import
 
 
 ######################################################################
