@@ -20,9 +20,10 @@ and SQL database
 """
 import sys
 from flask import Flask
-from service import config
 from flask_restx import Api
 from service.common import log_handlers
+from service import config
+
 
 # Will be initialize when app is created
 api = None  # pylint: disable=invalid-name
