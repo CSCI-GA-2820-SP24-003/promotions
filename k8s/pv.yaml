@@ -11,4 +11,4 @@ spec:
   persistentVolumeReclaimPolicy: Recycle
   hostPath:
     path: /data/pv0001
-  storageClassName: "default"
+  # storageClassName: "default"
