@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:alpine
+          image: postgres:15-alpine
           ports:
             - containerPort: 5432
               protocol: TCP
@@ -40,7 +40,7 @@ spec:
                     key: postgres_db
           volumeMounts:
           - name: postgres-storage
-            mountPath: /var/lib/postgresql/data
+            mountPath: /var/lib/postgresql
           resources:
             limits:
               cpu: "0.50"
