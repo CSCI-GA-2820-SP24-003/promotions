@@ -51,10 +51,10 @@ def create_app():
     api = Api(
         app,
         version="1.0.0",
-        title="Promotion Demo REST API Service",
-        description="This is a sample server Promotion store server.",
+        title="Promotions REST API Service",
+        description="This is a Promotions manager server.",
         default="promotions",
-        default_label="Promotion shop operations",
+        default_label="Promotions service operations",
         doc="/apidocs",  # default also could use doc='/apidocs/'
         prefix="/api",
     )
