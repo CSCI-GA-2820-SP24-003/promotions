@@ -149,13 +149,19 @@ class Promotion(db.Model):
                     "Invalid type for integer [product_id]: "
                     + str(type(data["product_id"]))
                 )
-            self.status = data.get("status", True)
+            status_val = data.get("status", True)
+            if not isinstance(status_val, bool):
+                raise ValueError("Invalid status value: must be boolean")
+            self.status = status_val
+
         except AttributeError as error:
             raise DataValidationError("Invalid attribute: " + error.args[0]) from error
         except KeyError as error:
             raise DataValidationError(
                 "Invalid Promotion: missing " + error.args[0]
             ) from error
+        except ValueError as error:
+            raise DataValidationError(f"Invalid value: {str(error)}") from error
         except TypeError as error:
             raise DataValidationError(
                 "Invalid Promotion: body of request contained bad or no data "
