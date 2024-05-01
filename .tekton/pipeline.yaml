@@ -18,6 +18,10 @@ spec:
       description: The name of the image to build
       name: IMAGE_NAME
       type: string
+    - default: 'https://promotions-anoushka21-dev.apps.sandbox-m2.ll9k.p1.openshiftapps.com/'
+      description: The URL on which BDD testing is done
+      name: BASE_URL
+      type: string
   tasks:
     - name: git-clone
       params:
