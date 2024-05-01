@@ -261,18 +261,20 @@ class TestPromotionModel(TestCaseBase):
         """It should not deserialize a bad status attribute"""
         test_promotion = PromotionFactory()
         data = test_promotion.serialize()
-        data["status"] = "unknown" 
+        data["status"] = "unknown"
         promotion = Promotion()
         with self.assertRaises(DataValidationError) as context:
             promotion.deserialize(data)
         self.assertEqual(str(context.exception), "Invalid value: Invalid status value: must be boolean")
 
+
 ######################################################################
 #  T E S T   E X C E P T I O N   H A N D L E R S
 ######################################################################
-class TestExceptionHandlers(TestCaseBase):
-    """Promotion Model Exception Handlers"""
 
+class TestExceptionHandlers(TestCaseBase):
+
+    """Promotion Model Exception Handlers"""
     @patch("service.models.db.session.commit")
     def test_create_exception(self, exception_mock):
         """It should catch a create exception"""
