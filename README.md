@@ -7,7 +7,7 @@
 [![codecov](https://codecov.io/gh/CSCI-GA-2820-SP24-003/promotions/graph/badge.svg?token=Y8JOEKTXJX)](https://codecov.io/gh/CSCI-GA-2820-SP24-003/promotions)
 
 ## Overview
-This is the Promotions repository of the back-end of an e-Commerce Website as a collection of RESTful services. The Promotions Squad handles deals on products (Eg: 20 % discount, buy 1 get 1 etc.)
+This is the Promotions repository of the back-end of an e-Commerce Website as a collection of RESTful services. The Promotions Squad handles deals on products (Eg: 20 % discount, buy 1 get 1 etc.). You can use this link to access our service: https://promotions-anoushka21-dev.apps.sandbox-m2.ll9k.p1.openshiftapps.com/.
 
 ## Database Schema
 
@@ -19,22 +19,30 @@ This is the Promotions repository of the back-end of an e-Commerce Website as a 
 | duration       | `<integer>`  | Number of days for which the promotion is valid |
 | rule      | `<string>`  | Rule describing the promotion|
 | product_id    | `<integer>`  | Describes the product on which the promotion is applied|
-| promotion_type    | `<enum>`  | Describes the type of promotion-AMOUNT_DISCOUNT,PERCENTAGE_DISCOUNT or BXGY|
+| promotion_type    | `<enum>`  | Describes the type of promotion-AMOUNT_DISCOUNT,PERCENTAGE_DISCOUNT, BXGY or UNKNOWN|
  status   | `<boolean>`  | Describes if promotion is activated or not|
 
 ## RESTful API Endpoints
+
+Detailed API information could be access at endpoint `/apidocs`.
 
 | Method         | URL | Details     |
 |-----------------|-----------|-----------------|
 | `POST`             | `/promotions` |  Create a new promotion      |
 | `GET`       | `/promotions/<int:promotion_id>` | Reads the promotion with id `promotion_id`  |
 | `DELETE`  | `/promotions/<int:promotion_id>`  | Deletes the promotion with id `promotion_id` |
-| `GET`     | `/promotions`  | Lists all the promotions. We can also query or filter the promotions using promotion_type,start_date and product_id|
+| `GET`     | `/promotions`  | Lists all the promotions. We can also query or filter the promotions using name, promotion_type, product_id, start_date, and status|
 | `PUT`   | `/promotions/<int:promotions_id>`  | Updates existing promotion with id `promotion_id`|
 | `PUT`   | `/promotions/<int:promotions_id>/activate`  | Activates existing promotion with id  `promotion_id`|
 | `PUT`   | `/promotions/<int:promotions_id>/deactivate`  | Deactivates existing promotion with id  `promotion_id`|
 
+## Run the service localy
 
+You could run `make test` to run the TDD tests.
+
+You could use `make lint` to run the pylint.
+
+You could use `honcho start` to start the service, and it will run at `localhost:8080`. Then, you could run `behave` to run the BDD tests.
 
 ## License
 
