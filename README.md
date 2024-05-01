@@ -44,6 +44,8 @@ You could use `make lint` to run the pylint.
 
 You could use `honcho start` to start the service, and it will run at `localhost:8080`. Then, you could run `behave` to run the BDD tests.
 
+You could use `make cluster` followed by `kubectl apply -f k8s` to deploy our service locally and then run BDD test `behave` to check it.
+
 ## License
 
 Copyright (c) 2016, 2024 [John Rofrano](https://www.linkedin.com/in/JohnRofrano/). All rights reserved.
