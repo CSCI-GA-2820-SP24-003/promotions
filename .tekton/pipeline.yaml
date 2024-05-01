@@ -138,5 +138,21 @@ spec:
       workspaces:
         - name: source
           workspace: pipeline-workspace
+    - name: behave-bdd
+      params:
+        - name: BASE_URL
+          value: $(params.BASE_URL)
+        - name: WAIT_SECONDS
+          value: '60'
+        - name: DRIVER
+          value: chrome
+      runAfter:
+        - deploy-image
+      taskRef:
+        kind: Task
+        name: behave
+      workspaces:
+        - name: source
+          workspace: pipeline-workspace
   workspaces:
     - name: pipeline-workspace
