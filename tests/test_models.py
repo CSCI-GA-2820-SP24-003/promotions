@@ -257,6 +257,15 @@ class TestPromotionModel(TestCaseBase):
         promotion = Promotion()
         self.assertRaises(DataValidationError, promotion.deserialize, data)
 
+    def test_invalid_status_non_boolean(self):
+        """It should not deserialize a bad status attribute"""
+        test_promotion = PromotionFactory()
+        data = test_promotion.serialize()
+        data["status"] = "unknown" 
+        promotion = Promotion()
+        with self.assertRaises(DataValidationError) as context:
+            promotion.deserialize(data)
+        self.assertEqual(str(context.exception), "Invalid value: Invalid status value: must be boolean")
 
 ######################################################################
 #  T E S T   E X C E P T I O N   H A N D L E R S
